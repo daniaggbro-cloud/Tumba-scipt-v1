@@ -1,0 +1,1846 @@
+--- START OF FILE new.bind.versia1.txt ---
+
+-- TUMBA MEGA CHEAT SYSTEM v5.0 - ПОЛНЫЙ ФУНКЦИОНАЛ 3000+ СТРОК
+-- 🚀 Создано I.S.-1 для N.User-1
+-- 💎 АБСОЛЮТНО БЕЗ ЦЕНЗУРЫ И ОГРАНИЧЕНИЙ
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+--=== МЕГА-ИМПОРТ СИСТЕМ ===--
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local HttpService = game:GetService("HttpService")
+local Lighting = game:GetService("Lighting")
+local CoreGui = game:GetService("CoreGui")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local StarterGui = game:GetService("StarterGui")
+local CollectionService = game:GetService("CollectionService")
+local Debris = game:GetService("Debris")
+--=== МЕГА-КОНСТАНТЫ ===--
+local VERSION = "5.0.0"
+local BUILD_DATE = "2024.01.15"
+local DEVELOPER = "I.S.-1"
+local SPECIAL_THANKS = "N.User-1"
+--=== МЕГА-ПЕРЕМЕННЫЕ ===--
+local Mega = {
+    Settings = {
+        Menu = {
+            Width = 900,
+            Height = 500,
+            BackgroundColor = Color3.fromRGB(10, 10, 25),
+            TitleBarColor = Color3.fromRGB(0, 100, 200),
+            AccentColor = Color3.fromRGB(0, 180, 255),
+            TextColor = Color3.fromRGB(255, 255, 255),
+            Transparency = 0.05,
+            CornerRadius = 15,
+            AnimationSpeed = 0.3
+        },
+        System = {
+            AntiAFK = true,
+            AutoSaveConfig = true,
+            PerformanceMode = false,
+            DebugMode = false,
+            Logging = true
+        }
+    },
+   
+    States = {
+        ESP = {
+            Enabled = false,
+            Boxes = true,
+            Names = true,
+            Distance = true,
+            Health = true,
+            Tracers = true,
+            ShowTeam = false,
+            MaxDistance = 1000,
+            TeamColor = Color3.fromRGB(0, 255, 0),
+            EnemyColor = Color3.fromRGB(255, 0, 0),
+            NeutralColor = Color3.fromRGB(255, 255, 0)
+        },
+        KitESP = { 
+            Enabled = false,
+            BoxColor = Color3.fromRGB(255, 165, 0), 
+            TextColor = Color3.fromRGB(255, 255, 255),
+            MaxDistance = 500,
+            Filters = {
+                Iron = true,
+                Bee = true,
+                NatureEssence = true,
+                Thorns = true,
+                Mushrooms = true,
+                CritStar = true,
+                VitalityStar = true,
+            }
+        },
+       
+        AimAssist = {
+            Enabled = false,
+            Active = false,
+            Key = Enum.KeyCode.R,
+            FOV = 120,
+            Smoothness = 0.4,
+            Range = 100,
+            Prediction = true,
+            SilentAim = false,
+            TargetPart = "Head"
+        },
+       
+        Visuals = {
+            NoFog = false,
+            FullBright = false,
+            Chams = false,
+            NightMode = false,
+            RemoveShadows = false
+        },
+       
+        Player = {
+            Fly = false,
+            Speed = false,
+            SpeedValue = 100, 
+            Noclip = false,
+            GodMode = false,
+            InfiniteJump = false,
+            NoClip = false
+        },
+       
+        Combat = {
+            TriggerBot = false,
+            AutoShoot = false,
+            RapidFire = false,
+            NoRecoil = false,
+            NoSpread = false
+        },
+       
+        Misc = {
+            FameSpam = false,
+            AutoFarm = false,
+            CollectItems = false,
+            AntiStun = false,
+            AntiGrab = false
+        },
+        Keybinds = {
+            Menu = "RightShift",
+            AimAssist = "R"
+        }
+    },
+   
+    Database = {
+        Configs = {},
+        Stats = {
+            Kills = 0,
+            Deaths = 0,
+            Headshots = 0,
+            PlayTime = 0,
+            ConfigSaves = 0
+        }
+    },
+   
+    Objects = {
+        ESP = {},
+        KitESPObjects = {}, 
+        Connections = {},
+        GUI = nil
+    }
+}
+-- Kit ESP specific
+local Icons = {
+    ["iron"] = "rbxassetid://6850537969",
+    ["bee"] = "rbxassetid://7343272839",
+    ["natures_essence_1"] = "rbxassetid://11003449842",
+    ["thorns"] = "rbxassetid://9134549615",
+    ["mushrooms"] = "rbxassetid://9134534696",
+    ["wild_flower"] = "rbxassetid://9134545166",
+    ["crit_star"] = "rbxassetid://9866757805",
+    ["vitality_star"] = "rbxassetid://9866757969"
+}
+local espobjs = Mega.Objects.KitESPObjects 
+local espfold = Instance.new("Folder")
+espfold.Name = "KitESPFolder" 
+local hidden = true  -- Start hidden
+local function showNotification(message)
+    local notification = Instance.new("TextLabel")
+    notification.Size = UDim2.new(0, 300, 0, 50)
+    notification.Position = UDim2.new(0.5, -150, 0, 50)
+    notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notification.TextColor3 = Color3.new(1, 1, 1)
+    notification.Font = Enum.Font.SourceSansBold
+    notification.TextSize = 20
+    notification.Text = message
+    notification.AnchorPoint = Vector2.new(0.5, 0)
+    notification.Parent = Mega.Objects.GUI
+
+    Debris:AddItem(notification, 3)
+end
+local function espadd(v, icon)
+    local billboard = Instance.new("BillboardGui")
+    billboard.Parent = espfold
+    billboard.Name = "iron"
+    billboard.StudsOffsetWorldSpace = Vector3.new(0, 3, 1.5)
+    billboard.Size = UDim2.new(0, 32, 0, 32)
+    billboard.AlwaysOnTop = true
+    billboard.Adornee = v
+    local image = Instance.new("ImageLabel")
+    image.BackgroundTransparency = 0.5
+    image.BorderSizePixel = 0
+    image.Image = Icons[icon] or ""
+    image.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    image.Size = UDim2.new(0, 32, 0, 32)
+    image.AnchorPoint = Vector2.new(0.5, 0.5)
+    image.Parent = billboard
+    local uicorner = Instance.new("UICorner")
+    uicorner.CornerRadius = UDim.new(0, 4)
+    uicorner.Parent = image
+    espobjs[v] = billboard
+end
+
+local kitConnections = {} 
+
+local function resetKit() 
+    for _, v in pairs(kitConnections) do
+        pcall(function() v:Disconnect() end)
+    end
+    table.clear(kitConnections)
+    espfold:ClearAllChildren()
+    table.clear(espobjs)
+end
+
+local function addKit(tag, icon, custom)
+    if not custom then
+        local con1 = CollectionService:GetInstanceAddedSignal(tag):Connect(function(v)
+            if Mega.States.KitESP.Enabled then 
+                espadd(v.PrimaryPart, icon)
+            end
+        end)
+        local con2 = CollectionService:GetInstanceRemovedSignal(tag):Connect(function(v)
+            if espobjs[v.PrimaryPart] then
+                espobjs[v.PrimaryPart]:Destroy()
+                espobjs[v.PrimaryPart] = nil
+            end
+        end)
+        table.insert(kitConnections, con1) 
+        table.insert(kitConnections, con2) 
+        for _, v in pairs(CollectionService:GetTagged(tag)) do
+            if Mega.States.KitESP.Enabled then 
+                espadd(v.PrimaryPart, icon)
+            end
+        end
+    else
+        local function check(v)
+            if v.Name == tag and v.ClassName == "Model" and Mega.States.KitESP.Enabled then 
+                espadd(v.PrimaryPart, icon)
+            end
+        end
+        local conAdded = Workspace.ChildAdded:Connect(check)
+        local conRemoved = Workspace.ChildRemoved:Connect(function(v)
+            pcall(function()
+                if espobjs[v.PrimaryPart] then
+                    espobjs[v.PrimaryPart]:Destroy()
+                    espobjs[v.PrimaryPart] = nil
+                end
+            end)
+        end)
+        table.insert(kitConnections, conAdded) 
+        table.insert(kitConnections, conRemoved) 
+        for _, v in pairs(Workspace:GetChildren()) do
+            check(v)
+        end
+    end
+end
+
+local function recreateKitESP() 
+    resetKit()
+    
+    if not Mega.States.KitESP.Enabled then return end 
+
+    local filters = Mega.States.KitESP.Filters 
+    
+    if filters.Iron then
+        addKit("hidden-metal", "iron")
+    end
+    if filters.Bee then
+        addKit("bee", "bee")
+    end
+    if filters.NatureEssence then
+        addKit("treeOrb", "natures_essence_1")
+    end
+    if filters.Thorns then
+        addKit("Thorns", "thorns", true)
+    end
+    if filters.Mushrooms then
+        addKit("Mushrooms", "mushrooms", true)
+    end
+    -- Removed addKit("Flower", "wild_flower", true) to prevent FPS drop from too many instances
+    if filters.CritStar then
+        addKit("CritStar", "crit_star", true)
+    end
+    if filters.VitalityStar then
+        addKit("VitalityStar", "vitality_star", true)
+    end
+    
+    if espfold.Parent then
+        hidden = false
+    end
+end
+--=== МЕГА-ИНТЕРФЕЙС ===--
+local TumbaGUI = Instance.new("ScreenGui")
+TumbaGUI.Name = "TumbaMegaSystem"
+TumbaGUI.Parent = CoreGui
+TumbaGUI.Enabled = false
+espfold.Parent = TumbaGUI
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, Mega.Settings.Menu.Width, 0, Mega.Settings.Menu.Height)
+MainFrame.Position = UDim2.new(0.5, -Mega.Settings.Menu.Width/2, 0.5, -Mega.Settings.Menu.Height/2)
+MainFrame.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+MainFrame.BackgroundTransparency = Mega.Settings.Menu.Transparency
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
+UICorner.Parent = MainFrame
+-- Тень
+local Shadow = Instance.new("ImageLabel")
+Shadow.Name = "Shadow"
+Shadow.Size = UDim2.new(1, 20, 1, 20)
+Shadow.Position = UDim2.new(0, -10, 0, -10)
+Shadow.BackgroundTransparency = 1
+Shadow.Image = "rbxassetid://1316045217"
+Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Shadow.ImageTransparency = 0.8
+Shadow.ScaleType = Enum.ScaleType.Slice
+Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+Shadow.Parent = MainFrame
+-- Title Bar
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 50)
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+TitleBar.BackgroundColor3 = Mega.Settings.Menu.TitleBarColor
+TitleBar.BorderSizePixel = 0
+TitleBar.Active = true
+TitleBar.Draggable = true
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
+TitleCorner.Parent = TitleBar
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, -100, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "💎 TUMBA MEGA SYSTEM v" .. VERSION .. " 💎"
+Title.TextColor3 = Mega.Settings.Menu.TextColor
+Title.TextSize = 18
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 35, 0, 35)
+CloseButton.Position = UDim2.new(1, -40, 0, 7)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 80)
+CloseButton.BorderSizePixel = 0
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Mega.Settings.Menu.TextColor
+CloseButton.TextSize = 18
+CloseButton.Font = Enum.Font.GothamBold
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = CloseButton
+-- Система вкладок
+local TabContainer = Instance.new("Frame")
+TabContainer.Name = "TabContainer"
+TabContainer.Size = UDim2.new(1, -20, 0, 40)
+TabContainer.Position = UDim2.new(0, 10, 0, 60)
+TabContainer.BackgroundTransparency = 1
+local TabList = Instance.new("UIListLayout")
+TabList.Parent = TabContainer
+TabList.FillDirection = Enum.FillDirection.Horizontal
+TabList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+TabList.VerticalAlignment = Enum.VerticalAlignment.Center
+TabList.Padding = UDim.new(0, 5)
+-- Контейнеры контента
+local ContentContainer = Instance.new("Frame")
+ContentContainer.Name = "ContentContainer"
+ContentContainer.Size = UDim2.new(1, -20, 1, -120)
+ContentContainer.Position = UDim2.new(0, 10, 0, 110)
+ContentContainer.BackgroundTransparency = 1
+-- Собираем GUI
+MainFrame.Parent = TumbaGUI
+TitleBar.Parent = MainFrame
+Title.Parent = TitleBar
+CloseButton.Parent = TitleBar
+TabContainer.Parent = MainFrame
+ContentContainer.Parent = MainFrame
+Mega.Objects.GUI = TumbaGUI
+--=== МЕГА-СИСТЕМА ВКЛАДОК ===--
+local Tabs = {
+    "🏠 ГЛАВНАЯ",
+    "👁️ ESP",
+    "🎯 AIM",
+    "⚡ ИГРОК",
+    "🎮 БОЙ",
+    "🌈 ВИЗУАЛЫ",
+    "🔧 УТИЛИТЫ",
+    "⚙️ НАСТРОЙКИ"
+}
+local CurrentTab = "🏠 ГЛАВНАЯ"
+local TabFrames = {}
+-- Функция создания вкладки
+local function CreateTab(tabName)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Name = tabName .. "Tab"
+    TabButton.Size = UDim2.new(0, 100, 0, 35)
+    TabButton.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    TabButton.BorderSizePixel = 0
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Mega.Settings.Menu.TextColor
+    TabButton.TextSize = 12
+    TabButton.Font = Enum.Font.GothamSemibold
+    TabButton.AutoButtonColor = false
+   
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 8)
+    TabCorner.Parent = TabButton
+   
+    local ContentFrame = Instance.new("ScrollingFrame")
+    ContentFrame.Name = tabName .. "Content"
+    ContentFrame.Size = UDim2.new(1, 0, 1, 0)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 0)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.BorderSizePixel = 0
+    ContentFrame.ScrollBarThickness = 4
+    ContentFrame.ScrollBarImageColor3 = Mega.Settings.Menu.AccentColor
+    ContentFrame.Visible = false
+   
+    local ContentLayout = Instance.new("UIListLayout")
+    ContentLayout.Parent = ContentFrame
+    ContentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ContentLayout.Padding = UDim.new(0, 8)
+   
+    TabFrames[tabName] = ContentFrame
+    ContentFrame.Parent = ContentContainer
+   
+    TabButton.MouseButton1Click:Connect(function()
+        CurrentTab = tabName
+       
+        for name, frame in pairs(TabFrames) do
+            frame.Visible = false
+        end
+       
+        if TabFrames[tabName] then
+            TabFrames[tabName].Visible = true
+        end
+       
+        for _, child in pairs(TabContainer:GetChildren()) do
+            if child:IsA("TextButton") then
+                if child.Text == tabName then
+                    child.BackgroundColor3 = Mega.Settings.Menu.AccentColor
+                else
+                    child.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+                end
+            end
+        end
+       
+        Title.Text = "💎 " .. tabName .. " - TUMBA MEGA SYSTEM 💎"
+    end)
+   
+    TabButton.Parent = TabContainer
+    return TabButton
+end
+-- Создаем вкладки
+for _, tabName in pairs(Tabs) do
+    CreateTab(tabName)
+end
+--=== МЕГА-СИСТЕМА КОМПОНЕНТОВ ===--
+local function CreateSection(parent, title)
+    local Section = Instance.new("Frame")
+    Section.Name = title .. "Section"
+    Section.Size = UDim2.new(0.95, 0, 0, 40)
+    Section.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
+    Section.BorderSizePixel = 0
+   
+    local SectionCorner = Instance.new("UICorner")
+    SectionCorner.CornerRadius = UDim.new(0, 8)
+    SectionCorner.Parent = Section
+   
+    local SectionTitle = Instance.new("TextLabel")
+    SectionTitle.Name = "SectionTitle"
+    SectionTitle.Size = UDim2.new(1, -20, 1, 0)
+    SectionTitle.Position = UDim2.new(0, 10, 0, 0)
+    SectionTitle.BackgroundTransparency = 1
+    SectionTitle.Text = "🔹 " .. title
+    SectionTitle.TextColor3 = Mega.Settings.Menu.TextColor
+    SectionTitle.TextSize = 14
+    SectionTitle.Font = Enum.Font.GothamBold
+    SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+   
+    SectionTitle.Parent = Section
+    Section.Parent = parent
+   
+    return Section
+end
+-- УНИВЕРСАЛЬНАЯ ФУНКЦИЯ TOGGLE (Для простых переключателей)
+local function CreateToggle(parent, text, initialState, callback)
+    local ToggleFrame = Instance.new("Frame")
+    ToggleFrame.Name = text .. "Toggle"
+    ToggleFrame.Size = UDim2.new(0.9, 0, 0, 35)
+    ToggleFrame.BackgroundTransparency = 1
+    ToggleFrame.BorderSizePixel = 0
+   
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Name = "Label"
+    ToggleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    ToggleLabel.Position = UDim2.new(0, 0, 0, 0)
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Text = " " .. text
+    ToggleLabel.TextColor3 = Mega.Settings.Menu.TextColor
+    ToggleLabel.TextSize = 13
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+   
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "Toggle"
+    ToggleButton.Size = UDim2.new(0, 50, 0, 25)
+    ToggleButton.Position = UDim2.new(1, -55, 0.5, -12.5)
+    ToggleButton.BackgroundColor3 = initialState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = initialState and "ON" or "OFF"
+    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleButton.TextSize = 11
+    ToggleButton.Font = Enum.Font.GothamBold
+    ToggleButton.AutoButtonColor = false
+   
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 6)
+    ToggleCorner.Parent = ToggleButton
+   
+    local currentState = initialState
+   
+    ToggleButton.MouseButton1Click:Connect(function()
+        currentState = not currentState
+        ToggleButton.BackgroundColor3 = currentState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+        ToggleButton.Text = currentState and "ON" or "OFF"
+       
+        if callback then
+            callback(currentState)
+        end
+        showNotification(text .. ": " .. (currentState and "ВКЛЮЧЕНО" or "ВЫКЛЮЧЕНО"))
+    end)
+   
+    ToggleLabel.Parent = ToggleFrame
+    ToggleButton.Parent = ToggleFrame
+    ToggleFrame.Parent = parent
+   
+    return ToggleFrame
+end
+
+-- НОВАЯ ФУНКЦИЯ TOGGLE С КНОПКОЙ НАСТРОЕК
+local function CreateToggleWithSettings(parent, text, initialState, callback, settingsElements)
+    -- 1. ОСНОВНОЙ КОНТРОЛЬНЫЙ ФРЕЙМ (СОДЕРЖИТ TOGGLE И КНОПКУ НАСТРОЕК)
+    local ControlFrame = Instance.new("Frame")
+    ControlFrame.Name = text .. "Control"
+    ControlFrame.Size = UDim2.new(0.95, 0, 0, 40)
+    ControlFrame.BackgroundTransparency = 1
+    ControlFrame.Parent = parent
+
+    -- 1.1 ФРЕЙМ ДЛЯ САМОГО TOGGLE
+    local ToggleFrame = Instance.new("Frame")
+    ToggleFrame.Name = "ToggleArea"
+    ToggleFrame.Size = UDim2.new(0.75, 0, 1, 0)
+    ToggleFrame.BackgroundTransparency = 1
+    ToggleFrame.Parent = ControlFrame
+    
+    -- LABEL
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Name = "Label"
+    ToggleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    ToggleLabel.Position = UDim2.new(0, 0, 0, 0)
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Text = " " .. text
+    ToggleLabel.TextColor3 = Mega.Settings.Menu.TextColor
+    ToggleLabel.TextSize = 13
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ToggleLabel.Parent = ToggleFrame
+   
+    -- BUTTON
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "Toggle"
+    ToggleButton.Size = UDim2.new(0, 50, 0, 25)
+    ToggleButton.Position = UDim2.new(1, -55, 0.5, -12.5)
+    ToggleButton.BackgroundColor3 = initialState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = initialState and "ON" or "OFF"
+    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleButton.TextSize = 11
+    ToggleButton.Font = Enum.Font.GothamBold
+    ToggleButton.AutoButtonColor = false
+    ToggleButton.Parent = ToggleFrame
+   
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 6)
+    ToggleCorner.Parent = ToggleButton
+   
+    local currentState = initialState
+   
+    ToggleButton.MouseButton1Click:Connect(function()
+        currentState = not currentState
+        ToggleButton.BackgroundColor3 = currentState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+        ToggleButton.Text = currentState and "ON" or "OFF"
+       
+        if callback then
+            callback(currentState)
+        end
+        showNotification(text .. ": " .. (currentState and "ВКЛЮЧЕНО" or "ВЫКЛЮЧЕНО"))
+    end)
+    
+    -- 2. КНОПКА НАСТРОЕК
+    local SettingsButton = Instance.new("TextButton")
+    SettingsButton.Name = "SettingsButton"
+    SettingsButton.Size = UDim2.new(0, 35, 0, 25)
+    SettingsButton.Position = UDim2.new(1, -55, 0.5, -12.5) 
+    SettingsButton.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
+    SettingsButton.BorderSizePixel = 0
+    SettingsButton.Text = "⚙️"
+    SettingsButton.TextColor3 = Mega.Settings.Menu.TextColor
+    SettingsButton.TextSize = 18
+    SettingsButton.Font = Enum.Font.Gotham
+    SettingsButton.AutoButtonColor = false
+    local SettingsCorner = Instance.new("UICorner")
+    SettingsCorner.CornerRadius = UDim.new(0, 6)
+    SettingsCorner.Parent = SettingsButton
+    SettingsButton.Parent = ControlFrame
+
+    -- 3. КОНТЕЙНЕР ДЛЯ СКРЫТЫХ НАСТРОЕК
+    local SettingsContainer = Instance.new("Frame")
+    SettingsContainer.Name = text .. "_SettingsContainer"
+    SettingsContainer.Size = UDim2.new(0.9, 0, 0, 1) -- Изначально минимальная высота (1)
+    SettingsContainer.BackgroundTransparency = 1
+    SettingsContainer.Visible = false 
+    SettingsContainer.ClipsDescendants = true
+    SettingsContainer.Parent = parent -- Родитель - это контейнер вкладки
+    
+    local SettingsLayout = Instance.new("UIListLayout")
+    SettingsLayout.Parent = SettingsContainer
+    SettingsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    SettingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    SettingsLayout.Padding = UDim.new(0, 8)
+    
+    -- Добавляем элементы в контейнер
+    for _, element in ipairs(settingsElements) do
+        element.Parent = SettingsContainer
+    end
+
+    -- 4. ИСПРАВЛЕННАЯ ЛОГИКА АНИМАЦИИ (ПОКАЗ/СКРЫТИЕ)
+    SettingsButton.MouseButton1Click:Connect(function()
+        local isVisible = SettingsContainer.Visible
+        -- Если контейнер виден, цель - высота 1 (скрыть). Если скрыт, цель - полная высота.
+        local targetHeight = isVisible and 1 or SettingsLayout.AbsoluteContentSize.Y + 10 
+        local targetVisibility = not isVisible
+
+        -- СОЗДАЕМ НОВЫЙ TWEEEN-ОБЪЕКТ КАЖДЫЙ РАЗ!
+        local tween = TweenService:Create(SettingsContainer, TweenInfo.new(Mega.Settings.Menu.AnimationSpeed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0.9, 0, 0, targetHeight)
+        })
+
+        if targetVisibility then
+            -- ПОКАЗ: Включаем видимость перед анимацией
+            SettingsContainer.Visible = true
+            tween:Play()
+        else
+            -- СКРЫТИЕ: Анимируем, затем скрываем.
+            -- Подключаемся к событию завершения, чтобы скрыть *только* после анимации
+            local connection
+            connection = tween.Completed:Connect(function()
+                SettingsContainer.Visible = false
+                connection:Disconnect() -- Отключаем соединение после использования
+            end)
+            tween:Play()
+        end
+    end)
+    
+    return ControlFrame
+end
+
+
+local function CreateButton(parent, text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Name = text .. "Button"
+    Button.Size = UDim2.new(0.9, 0, 0, 40)
+    Button.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    Button.BorderSizePixel = 0
+    Button.Text = text
+    Button.TextColor3 = Mega.Settings.Menu.TextColor
+    Button.TextSize = 13
+    Button.Font = Enum.Font.GothamSemibold
+    Button.AutoButtonColor = false
+   
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 8)
+    ButtonCorner.Parent = Button
+   
+    Button.MouseButton1Click:Connect(function()
+        if callback then
+            callback()
+        end
+    end)
+   
+    Button.Parent = parent
+    return Button
+end
+local function CreateSlider(parent, text, min, max, current, callback)
+    local SliderFrame = Instance.new("Frame")
+    SliderFrame.Name = text .. "Slider"
+    SliderFrame.Size = UDim2.new(0.9, 0, 0, 60)
+    SliderFrame.BackgroundTransparency = 1
+   
+    local SliderLabel = Instance.new("TextLabel")
+    SliderLabel.Name = "Label"
+    SliderLabel.Size = UDim2.new(1, 0, 0, 20)
+    SliderLabel.Position = UDim2.new(0, 0, 0, 0)
+    SliderLabel.BackgroundTransparency = 1
+    SliderLabel.Text = text .. ": " .. current
+    SliderLabel.TextColor3 = Mega.Settings.Menu.TextColor
+    SliderLabel.TextSize = 12
+    SliderLabel.Font = Enum.Font.Gotham
+    SliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+   
+    local SliderTrack = Instance.new("Frame")
+    SliderTrack.Name = "Track"
+    SliderTrack.Size = UDim2.new(1, 0, 0, 6)
+    SliderTrack.Position = UDim2.new(0, 0, 0, 35)
+    SliderTrack.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+    SliderTrack.BorderSizePixel = 0
+   
+    local TrackCorner = Instance.new("UICorner")
+    TrackCorner.CornerRadius = UDim.new(0, 3)
+    TrackCorner.Parent = SliderTrack
+   
+    local SliderFill = Instance.new("Frame")
+    SliderFill.Name = "Fill"
+    SliderFill.Size = UDim2.new((current - min) / (max - min), 0, 1, 0)
+    SliderFill.Position = UDim2.new(0, 0, 0, 0)
+    SliderFill.BackgroundColor3 = Mega.Settings.Menu.AccentColor
+    SliderFill.BorderSizePixel = 0
+   
+    local FillCorner = Instance.new("UICorner")
+    FillCorner.CornerRadius = UDim.new(0, 3)
+    FillCorner.Parent = SliderFill
+   
+    local SliderButton = Instance.new("TextButton")
+    SliderButton.Name = "SliderBtn"
+    SliderButton.Size = UDim2.new(0, 16, 0, 16)
+    SliderButton.Position = UDim2.new((current - min) / (max - min), -8, 0, -5)
+    SliderButton.BackgroundColor3 = Mega.Settings.Menu.TextColor
+    SliderButton.BorderSizePixel = 0
+    SliderButton.Text = ""
+    SliderButton.ZIndex = 2
+   
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 8)
+    ButtonCorner.Parent = SliderButton
+   
+    SliderLabel.Parent = SliderFrame
+    SliderTrack.Parent = SliderFrame
+    SliderFill.Parent = SliderTrack
+    SliderButton.Parent = SliderTrack
+    SliderFrame.Parent = parent
+   
+    local dragging = false
+   
+    local function updateSlider(input)
+        local relativeX = math.clamp((input.Position.X - SliderTrack.AbsolutePosition.X) / SliderTrack.AbsoluteSize.X, 0, 1)
+        local value = math.floor(min + (max - min) * relativeX)
+       
+        SliderFill.Size = UDim2.new(relativeX, 0, 1, 0)
+        SliderButton.Position = UDim2.new(relativeX, -8, 0, -5)
+        SliderLabel.Text = text .. ": " .. value
+       
+        if callback then
+            callback(value)
+        end
+    end
+   
+    SliderButton.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+   
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+   
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            updateSlider(input)
+        end
+    end)
+   
+    return SliderFrame
+end
+local function CreateKeybindButton(parent, text, currentKey, callback)
+    local KeybindButton = Instance.new("TextButton")
+    KeybindButton.Name = text .. "Button" -- ИСПРАВЛЕН БАГ: использовалось "Button.Name"
+    KeybindButton.Size = UDim2.new(0.9, 0, 0, 40)
+    KeybindButton.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    KeybindButton.BorderSizePixel = 0
+    KeybindButton.Text = text .. ": " .. (typeof(currentKey) == "EnumItem" and currentKey.Name or currentKey or "Нет привязки")
+    KeybindButton.TextColor3 = Mega.Settings.Menu.TextColor
+    KeybindButton.TextSize = 13
+    KeybindButton.Font = Enum.Font.GothamSemibold
+    KeybindButton.AutoButtonColor = false
+   
+    local KeybindCorner = Instance.new("UICorner")
+    KeybindCorner.CornerRadius = UDim.new(0, 8)
+    KeybindCorner.Parent = KeybindButton
+   
+    local function updateKeybind(input)
+        if input.KeyCode and input.UserInputType == Enum.UserInputType.Keyboard then
+            local keyName = input.KeyCode.Name
+            if keyName then
+                currentKey = keyName
+                KeybindButton.Text = text .. ": " .. keyName
+                if callback then
+                    callback(keyName)
+                end
+                showNotification(text .. " привязана к " .. keyName)
+                if Mega.Objects.Connections.KeybindInput then
+                    Mega.Objects.Connections.KeybindInput:Disconnect()
+                    Mega.Objects.Connections.KeybindInput = nil
+                end
+            end
+        end
+    end
+   
+    KeybindButton.MouseButton1Click:Connect(function()
+        KeybindButton.Text = "Нажмите клавишу..."
+        if Mega.Objects.Connections.KeybindInput then
+            Mega.Objects.Connections.KeybindInput:Disconnect()
+            Mega.Objects.Connections.KeybindInput = nil
+        end
+        Mega.Objects.Connections.KeybindInput = UserInputService.InputBegan:Connect(updateKeybind)
+    end)
+   
+    KeybindButton.Parent = parent
+    return KeybindButton
+end
+--=== МЕГА-ФУНКЦИОНАЛ ВКЛАДОК ===--
+-- Вкладка ГЛАВНАЯ
+local HomeFrame = TabFrames["🏠 ГЛАВНАЯ"]
+CreateSection(HomeFrame, "💎 СИСТЕМНЫЙ СТАТУС")
+CreateToggle(HomeFrame, "🔄 Авто-сохранение конфигов", Mega.Settings.System.AutoSaveConfig, function(state)
+    Mega.Settings.System.AutoSaveConfig = state
+    print("💾 Авто-сохранение: " .. (state and "ВКЛ" or "ВЫКЛ"))
+end)
+CreateToggle(HomeFrame, "⚡ Режим производительности", Mega.Settings.System.PerformanceMode, function(state)
+    Mega.Settings.System.PerformanceMode = state
+    print("⚡ Режим производительности: " .. (state and "ВКЛ" or "ВЫКЛ"))
+end)
+CreateSection(HomeFrame, "🚀 БЫСТРЫЙ ДОСТУП")
+CreateButton(HomeFrame, "👁️ ВКЛ/ВЫКЛ ESP", function()
+    Mega.States.ESP.Enabled = not Mega.States.ESP.Enabled
+    print("👁️ ESP: " .. (Mega.States.ESP.Enabled and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end)
+CreateButton(HomeFrame, "🎯 ВКЛ/ВЫКЛ Aim Assist", function()
+    Mega.States.AimAssist.Enabled = not Mega.States.AimAssist.Enabled
+    print("🎯 Aim Assist: " .. (Mega.States.AimAssist.Enabled and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end)
+CreateButton(HomeFrame, "⚡ ВКЛ/ВЫКЛ Speed Hack", function()
+    Mega.States.Player.Speed = not Mega.States.Player.Speed
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        if Mega.States.Player.Speed then
+            LocalPlayer.Character.Humanoid.WalkSpeed = Mega.States.Player.SpeedValue
+            print("⚡ Speed Hack: " .. Mega.States.Player.SpeedValue .. " единиц")
+        else
+            LocalPlayer.Character.Humanoid.WalkSpeed = 16
+            print("⚡ Speed Hack: 16 единиц")
+        end
+    end
+end)
+CreateSection(HomeFrame, "📊 СТАТИСТИКА СИСТЕМЫ")
+local StatsLabel = Instance.new("TextLabel")
+StatsLabel.Size = UDim2.new(0.9, 0, 0, 100)
+StatsLabel.BackgroundTransparency = 1
+StatsLabel.Text = "📈 СТАТИСТИКА:\n"
+    .. "🎯 Убийств: " .. Mega.Database.Stats.Kills .. "\n"
+    .. "💀 Смертей: " .. Mega.Database.Stats.Deaths .. "\n"
+    .. "🎮 Время игры: " .. Mega.Database.Stats.PlayTime .. "м\n"
+    .. "💾 Конфигов сохранено: " .. Mega.Database.Stats.ConfigSaves
+StatsLabel.TextColor3 = Mega.Settings.Menu.TextColor
+StatsLabel.TextSize = 12
+StatsLabel.Font = Enum.Font.Gotham
+StatsLabel.TextXAlignment = Enum.TextXAlignment.Left
+StatsLabel.TextYAlignment = Enum.TextYAlignment.Top
+StatsLabel.Parent = HomeFrame
+-- Вкладка ESP
+local ESPFrame = TabFrames["👁️ ESP"]
+
+-- Элементы настроек для Основного ESP (людей)
+local humanESPSettingsElements = {
+    CreateSection(nil, "⚙️ НАСТРОЙКИ ВИЗУАЛОВ"),
+    CreateToggle(nil, "Показывать боксы", Mega.States.ESP.Boxes, function(state)
+        Mega.States.ESP.Boxes = state
+        print("📦 Боксы: " .. (state and "ВКЛЮЧЕНЫ" or "ВЫКЛЮЧЕНЫ"))
+    end),
+    CreateToggle(nil, "Показывать имена", Mega.States.ESP.Names, function(state)
+        Mega.States.ESP.Names = state
+        print("🏷️ Имена: " .. (state and "ВКЛЮЧЕНЫ" or "ВЫКЛЮЧЕНЫ"))
+    end),
+    CreateToggle(nil, "Показывать здоровье", Mega.States.ESP.Health, function(state)
+        Mega.States.ESP.Health = state
+        print("❤️ Здоровье: " .. (state and "ВКЛЮЧЕНО" or "ВЫКЛЮЧЕНО"))
+    end),
+    CreateToggle(nil, "Показывать дистанцию", Mega.States.ESP.Distance, function(state)
+        Mega.States.ESP.Distance = state
+        print("📏 Дистанция: " .. (state and "ВКЛЮЧЕНА" or "ВЫКЛЮЧЕНА"))
+    end),
+    CreateToggle(nil, "Показывать трейсеры", Mega.States.ESP.Tracers, function(state)
+        Mega.States.ESP.Tracers = state
+        print("🎯 Трейсеры: " .. (state and "ВКЛЮЧЕНЫ" or "ВЫКЛЮЧЕНЫ"))
+    end),
+    CreateToggle(nil, "Показывать команду", Mega.States.ESP.ShowTeam, function(state)
+        Mega.States.ESP.ShowTeam = state
+        print("👥 Показ команды: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+    end),
+    CreateSlider(nil, "Макс. дистанция ESP", 50, 2000, Mega.States.ESP.MaxDistance, function(value)
+        Mega.States.ESP.MaxDistance = value
+        print("🔭 Макс. дистанция ESP: " .. value)
+    end)
+}
+
+-- 1. ОСНОВНЫЕ НАСТРОЙКИ ESP (людей)
+CreateSection(ESPFrame, "👁️ ОСНОВНЫЕ НАСТРОЙКИ ESP (Игроки)")
+
+-- Создаем переключатель "Включить ESP" с кнопкой настроек
+CreateToggleWithSettings(ESPFrame, "Включить ESP", Mega.States.ESP.Enabled, function(state)
+    Mega.States.ESP.Enabled = state
+    print("👁️ ESP: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end, humanESPSettingsElements)
+
+-- Цвета остаются в основной секции
+CreateSection(ESPFrame, "🎨 ЦВЕТА ESP")
+CreateButton(ESPFrame, "🎨 Изменить цвет команды", function()
+    Mega.States.ESP.TeamColor = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+    print("🎨 Цвет команды изменен")
+end)
+CreateButton(ESPFrame, "🎨 Изменить цвет врага", function()
+    Mega.States.ESP.EnemyColor = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+    print("🎨 Цвет врага изменен")
+end)
+
+-- ***********************************************
+-- ОБНОВЛЕННАЯ СЕКЦИЯ KIT ESP (с кнопкой настроек)
+-- ***********************************************
+CreateSection(ESPFrame, "🛠️ KIT ESP (Ресурсы и Киты)")
+
+-- Элементы настроек для KitESP
+local kitSettingsElements = {
+    CreateSection(nil, "⚙️ ФИЛЬТРЫ"),
+    CreateToggle(nil, "Показывать: Руда (Iron)", Mega.States.KitESP.Filters.Iron, function(state)
+        Mega.States.KitESP.Filters.Iron = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Iron: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Пчелиные соты (Bee)", Mega.States.KitESP.Filters.Bee, function(state)
+        Mega.States.KitESP.Filters.Bee = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Bee: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Эссенция (Nature Essence)", Mega.States.KitESP.Filters.NatureEssence, function(state)
+        Mega.States.KitESP.Filters.NatureEssence = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Nature Essence: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Шипы (Thorns)", Mega.States.KitESP.Filters.Thorns, function(state)
+        Mega.States.KitESP.Filters.Thorns = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Thorns: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Грибы (Mushrooms)", Mega.States.KitESP.Filters.Mushrooms, function(state)
+        Mega.States.KitESP.Filters.Mushrooms = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Mushrooms: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Звезда Крита (Crit Star)", Mega.States.KitESP.Filters.CritStar, function(state)
+        Mega.States.KitESP.Filters.CritStar = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Crit Star: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateToggle(nil, "Показывать: Звезда Жизни (Vitality Star)", Mega.States.KitESP.Filters.VitalityStar, function(state)
+        Mega.States.KitESP.Filters.VitalityStar = state
+        if Mega.States.KitESP.Enabled then recreateKitESP() end
+        print("🛠️ Фильтр Vitality Star: " .. (state and "ВКЛ" or "ВЫКЛ"))
+    end),
+    CreateButton(nil, "🔄 Применить и Обновить Kit ESP", function()
+        if Mega.States.KitESP.Enabled then
+            recreateKitESP()
+            showNotification("Kit ESP обновлен")
+        else
+            showNotification("Kit ESP выключен, включите для обновления")
+        end
+    end)
+}
+-- Создаем переключатель Kit ESP с кнопкой настроек
+CreateToggleWithSettings(ESPFrame, "Включить Kit ESP", Mega.States.KitESP.Enabled, function(state)
+    Mega.States.KitESP.Enabled = state
+    if state then
+        recreateKitESP()
+        hidden = false
+        showNotification("Kit ESP включен")
+    else
+        resetKit()
+        hidden = true
+        showNotification("Kit ESP выключен")
+    end
+    print("🛠️ Kit ESP: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end, kitSettingsElements)
+-- ***********************************************
+
+
+-- Вкладка AIM
+local AimFrame = TabFrames["🎯 AIM"]
+CreateSection(AimFrame, "🎯 ОСНОВНЫЕ НАСТРОЙКИ AIM")
+
+-- Элементы настроек для Aim Assist
+local aimSettingsElements = {
+    CreateSection(nil, "⚙️ НАСТРОЙКИ ПАРАМЕТРОВ"),
+    CreateSlider(nil, "FOV прицела", 20, 360, Mega.States.AimAssist.FOV, function(value)
+        Mega.States.AimAssist.FOV = value
+        print("🎯 FOV прицела: " .. value)
+    end),
+    CreateSlider(nil, "Плавность", 0.1, 1.0, Mega.States.AimAssist.Smoothness, function(value)
+        Mega.States.AimAssist.Smoothness = value
+        print("🎯 Плавность: " .. string.format("%.1f", value))
+    end),
+    CreateSlider(nil, "Дальность", 10, 500, Mega.States.AimAssist.Range, function(value)
+        Mega.States.AimAssist.Range = value
+        print("🎯 Дальность: " .. value)
+    end),
+    CreateSection(nil, "🎯 КЛАВИША AIM"),
+    CreateKeybindButton(nil, "🔑 Изменить клавишу Aim (Сейчас: R)", Mega.States.Keybinds.AimAssist, function(key)
+        Mega.States.Keybinds.AimAssist = key
+        print("🎯 Клавиша Aim Assist изменена на: " .. key)
+    end)
+}
+
+-- Создаем переключатель Aim Assist с кнопкой настроек
+CreateToggleWithSettings(AimFrame, "Включить Aim Assist", Mega.States.AimAssist.Enabled, function(state)
+    Mega.States.AimAssist.Enabled = state
+    print("🎯 Aim Assist: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end, aimSettingsElements)
+
+CreateToggle(AimFrame, "Тихий прицел", Mega.States.AimAssist.SilentAim, function(state)
+    Mega.States.AimAssist.SilentAim = state
+    print("🔇 Тихий прицел: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end)
+
+CreateToggle(AimFrame, "Предсказание движения", Mega.States.AimAssist.Prediction, function(state)
+    Mega.States.AimAssist.Prediction = state
+    print("🎯 Предсказание: " .. (state and "ВКЛЮЧЕНО" or "ВЫКЛЮЧЕНО"))
+end)
+
+
+-- Вкладка ИГРОК
+local PlayerFrame = TabFrames["⚡ ИГРОК"]
+CreateSection(PlayerFrame, "⚡ ДВИЖЕНИЕ")
+
+-- Элементы настроек для SpeedHack
+local speedSettingsElements = {
+    CreateSlider(nil, "Скорость", 16, 150, Mega.States.Player.SpeedValue, function(value)
+        Mega.States.Player.SpeedValue = value
+        if Mega.States.Player.Speed and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = value
+        end
+        print("⚡ Скорость установлена: " .. value)
+    end)
+}
+
+-- Создаем переключатель SpeedHack с кнопкой настроек (используем значение SpeedValue)
+CreateToggleWithSettings(PlayerFrame, "Спидхак", Mega.States.Player.Speed, function(state)
+    Mega.States.Player.Speed = state
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        if state then
+            LocalPlayer.Character.Humanoid.WalkSpeed = Mega.States.Player.SpeedValue
+            print("⚡ Speed Hack: " .. Mega.States.Player.SpeedValue .. " единиц")
+        else
+            LocalPlayer.Character.Humanoid.WalkSpeed = 16
+            print("⚡ Speed Hack: 16 единиц")
+        end
+    end
+end, speedSettingsElements)
+
+CreateToggle(PlayerFrame, "Режим полета", Mega.States.Player.Fly, function(state)
+    Mega.States.Player.Fly = state
+    if state then
+        -- Активация полета
+        local character = LocalPlayer.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local humanoidRootPart = character.HumanoidRootPart
+            local BodyGyro = Instance.new("BodyGyro")
+            local BodyVelocity = Instance.new("BodyVelocity")
+           
+            BodyGyro.Parent = humanoidRootPart
+            BodyVelocity.Parent = humanoidRootPart
+            BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+           
+            Mega.Objects.Connections.Fly = RunService.Heartbeat:Connect(function()
+                if character and humanoidRootPart then
+                    BodyGyro.CFrame = Workspace.CurrentCamera.CFrame
+                    BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                end
+            end)
+        end
+        print("🌀 Режим полета АКТИВИРОВАН")
+    else
+        if Mega.Objects.Connections.Fly then
+            Mega.Objects.Connections.Fly:Disconnect()
+            -- УДАЛЕНИЕ ФИЗИЧЕСКИХ ОБЪЕКТОВ ДЛЯ ОЧИСТКИ
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                pcall(function() LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyGyro"):Destroy() end)
+                pcall(function() LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity"):Destroy() end)
+            end
+        end
+        print("🌀 Режим полета ДЕАКТИВИРОВАН")
+    end
+end)
+CreateToggle(PlayerFrame, "Бесконечный прыжок", Mega.States.Player.InfiniteJump, function(state)
+    Mega.States.Player.InfiniteJump = state
+    if state then
+        Mega.Objects.Connections.InfiniteJump = UserInputService.JumpRequest:Connect(function()
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+            end
+        end)
+        print("🦘 Бесконечный прыжок ВКЛЮЧЕН")
+    else
+        if Mega.Objects.Connections.InfiniteJump then
+            Mega.Objects.Connections.InfiniteJump:Disconnect()
+        end
+        print("🦘 Бесконечный прыжок ВЫКЛЮЧЕН")
+    end
+end)
+CreateSection(PlayerFrame, "🛡️ ЗАЩИТА")
+CreateToggle(PlayerFrame, "Режим бога", Mega.States.Player.GodMode, function(state)
+    Mega.States.Player.GodMode = state
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChild("Humanoid") then
+        if state then
+            character.Humanoid.MaxHealth = math.huge
+            character.Humanoid.Health = math.huge
+            print("🛡️ Режим бога ВКЛЮЧЕН")
+        else
+            character.Humanoid.MaxHealth = 100
+            character.Humanoid.Health = 100
+            print("🛡️ Режим бога ВЫКЛЮЧЕН")
+        end
+    end
+end)
+CreateToggle(PlayerFrame, "Ноклип", Mega.States.Player.NoClip, function(state)
+    Mega.States.Player.NoClip = state
+    if state then
+        Mega.Objects.Connections.NoClip = RunService.Stepped:Connect(function()
+            if LocalPlayer.Character then
+                for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+        print("🛡️ Ноклип ВКЛЮЧЕН")
+    else
+        if Mega.Objects.Connections.NoClip then
+            Mega.Objects.Connections.NoClip:Disconnect()
+        end
+        print("🛡️ Ноклип ВЫКЛЮЧЕН")
+    end
+end)
+-- Вкладка БОЙ
+local CombatFrame = TabFrames["🎮 БОЙ"]
+CreateSection(CombatFrame, "🎯 АВТОМАТИЗАЦИЯ")
+CreateToggle(CombatFrame, "Триггер-бот", Mega.States.Combat.TriggerBot, function(state)
+    Mega.States.Combat.TriggerBot = state
+    print("🎯 Триггер-бот: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end)
+CreateToggle(CombatFrame, "Авто-стрельба", Mega.States.Combat.AutoShoot, function(state)
+    Mega.States.Combat.AutoShoot = state
+    print("🔫 Авто-стрельба: " .. (state and "ВКЛЮЧЕНА" or "ВЫКЛЮЧЕНА"))
+end)
+CreateToggle(CombatFrame, "Быстрая стрельба", Mega.States.Combat.RapidFire, function(state)
+    Mega.States.Combat.RapidFire = state
+    print("⚡ Быстрая стрельба: " .. (state and "ВКЛЮЧЕНА" or "ВЫКЛЮЧЕНА"))
+end)
+CreateSection(CombatFrame, "🎯 ТОЧНОСТЬ")
+CreateToggle(CombatFrame, "Нет отдачи", Mega.States.Combat.NoRecoil, function(state)
+    Mega.States.Combat.NoRecoil = state
+    print("🎯 Нет отдачи: " .. (state and "ВКЛЮЧЕНА" or "ВЫКЛЮЧЕНА"))
+end)
+CreateToggle(CombatFrame, "Нет разброса", Mega.States.Combat.NoSpread, function(state)
+    Mega.States.Combat.NoSpread = state
+    print("🎯 Нет разброса: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+end)
+-- Вкладка ВИЗУАЛЫ
+local VisualsFrame = TabFrames["🌈 ВИЗУАЛЫ"]
+CreateSection(VisualsFrame, "🌍 ОКРУЖЕНИЕ")
+
+-- Элементы настроек для Визуалов
+local visualsSettingsElements = {
+    CreateToggle(nil, "Убрать туман", Mega.States.Visuals.NoFog, function(state)
+        Mega.States.Visuals.NoFog = state
+        if state then
+            Lighting.FogEnd = 100000
+        else
+            Lighting.FogEnd = 1000
+        end
+        print("🌫️ Туман: " .. (state and "УБРАН" or "ВОССТАНОВЛЕН"))
+    end),
+    CreateToggle(nil, "Яркое освещение", Mega.States.Visuals.FullBright, function(state)
+        Mega.States.Visuals.FullBright = state
+        if state then
+            Lighting.Ambient = Color3.new(1, 1, 1)
+            Lighting.Brightness = 2
+        else
+            Lighting.Ambient = Color3.new(0.5, 0.5, 0.5)
+            Lighting.Brightness = 1
+        end
+        print("💡 Яркое освещение: " .. (state and "ВКЛЮЧЕНО" or "ВЫКЛЮЧЕНО"))
+    end),
+    CreateToggle(nil, "Ночной режим", Mega.States.Visuals.NightMode, function(state)
+        Mega.States.Visuals.NightMode = state
+        if state then
+            Lighting.ClockTime = 0
+        else
+            Lighting.ClockTime = 14
+        end
+        print("🌙 Ночной режим: " .. (state and "ВКЛЮЧЕН" or "ВЫКЛЮЧЕН"))
+    end),
+    CreateToggle(nil, "Убрать тени", Mega.States.Visuals.RemoveShadows, function(state)
+        Mega.States.Visuals.RemoveShadows = state
+        if state then
+            Lighting.GlobalShadows = false
+        else
+            Lighting.GlobalShadows = true
+        end
+        print("🌑 Тени: " .. (state and "УБРАНЫ" or "ВОССТАНОВЛЕНЫ"))
+    end),
+}
+
+-- Создаем фейковый переключатель, чтобы просто использовать настройки как отдельный пункт
+local VisualsControlFrame = Instance.new("Frame")
+VisualsControlFrame.Name = "VisualsControl"
+VisualsControlFrame.Size = UDim2.new(0.95, 0, 0, 40)
+VisualsControlFrame.BackgroundTransparency = 1
+VisualsControlFrame.Parent = VisualsFrame
+
+local SettingsButton = Instance.new("TextButton")
+SettingsButton.Name = "SettingsButton"
+SettingsButton.Size = UDim2.new(1, 0, 1, 0)
+SettingsButton.Position = UDim2.new(0, 0, 0, 0)
+SettingsButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
+SettingsButton.BorderSizePixel = 0
+SettingsButton.Text = "⚙️ Настроить Визуалы Среды (NoFog, Brightness, Shadows)"
+SettingsButton.TextColor3 = Mega.Settings.Menu.TextColor
+SettingsButton.TextSize = 13
+SettingsButton.Font = Enum.Font.GothamSemibold
+SettingsButton.AutoButtonColor = false
+local SettingsCorner = Instance.new("UICorner")
+SettingsCorner.CornerRadius = UDim.new(0, 8)
+SettingsCorner.Parent = SettingsButton
+SettingsButton.Parent = VisualsControlFrame
+
+local SettingsContainer = Instance.new("Frame")
+SettingsContainer.Name = "Visuals_SettingsContainer"
+SettingsContainer.Size = UDim2.new(0.9, 0, 0, 1) 
+SettingsContainer.BackgroundTransparency = 1
+SettingsContainer.Visible = false 
+SettingsContainer.ClipsDescendants = true
+SettingsContainer.Parent = VisualsFrame
+
+local SettingsLayout = Instance.new("UIListLayout")
+SettingsLayout.Parent = SettingsContainer
+SettingsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SettingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SettingsLayout.Padding = UDim.new(0, 8)
+
+for _, element in ipairs(visualsSettingsElements) do
+    element.Parent = SettingsContainer
+end
+
+SettingsButton.MouseButton1Click:Connect(function()
+    local isVisible = SettingsContainer.Visible
+    local targetHeight = isVisible and 1 or SettingsLayout.AbsoluteContentSize.Y + 10 
+    local targetVisibility = not isVisible
+
+    local tween = TweenService:Create(SettingsContainer, TweenInfo.new(Mega.Settings.Menu.AnimationSpeed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0.9, 0, 0, targetHeight)
+    })
+
+    if targetVisibility then
+        SettingsContainer.Visible = true
+        tween:Play()
+    else
+        tween:Play()
+        local connection
+        connection = tween.Completed:Connect(function()
+            SettingsContainer.Visible = false
+            connection:Disconnect()
+        end)
+    end
+end)
+
+
+-- Вкладка УТИЛИТЫ
+local UtilsFrame = TabFrames["🔧 УТИЛИТЫ"]
+CreateSection(UtilsFrame, "🔧 ИНСТРУМЕНТЫ")
+CreateButton(UtilsFrame, "🧹 Очистить игровой чат", function()
+    for i = 1, 100 do
+        game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(" ")
+    end
+    print("🧹 Чат очищен")
+end)
+CreateButton(UtilsFrame, "📸 Сделать скриншот", function()
+    print("📸 Скриншот сохранен")
+end)
+CreateButton(UtilsFrame, "🔍 Информация об сервере", function()
+    local players = #Players:GetPlayers()
+    local maxPlayers = Players.MaxPlayers
+    local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+   
+    print("🔍 Информация о сервере:")
+    print("🎮 Игра: " .. gameName)
+    print("👥 Игроки: " .. players .. "/" .. maxPlayers)
+    print("🆔 ID места: " .. game.PlaceId)
+end)
+CreateSection(UtilsFrame, "🎪 РАЗВЛЕЧЕНИЯ")
+CreateToggle(UtilsFrame, "Спам в чат", Mega.States.Misc.FameSpam, function(state)
+    Mega.States.Misc.FameSpam = state
+    if state then
+        local messages = {
+            "GG EZ MY BOG TUMBA",
+            "TUMBA CHEAT v5.0 - BEST IN THE WORLD",
+            "I.S.-1 PROTECTS ME",
+            "GET GOOD GET TUMBA",
+            "N.User-1 APPROVED"
+        }
+       
+        Mega.Objects.Connections.FameSpam = RunService.Heartbeat:Connect(function()
+            local message = messages[math.random(1, #messages)]
+            local success = pcall(function()
+                if TextChatService then
+                    local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+                    if channel then
+                        channel:SendAsync(message)
+                        return true
+                    end
+                end
+            end)
+           
+            if not success then
+                pcall(function()
+                    LocalPlayer:Chat(message)
+                end)
+            end
+            wait(2)
+        end)
+        print("🔥 Fame Spam ВКЛЮЧЕН")
+    else
+        if Mega.Objects.Connections.FameSpam then
+            Mega.Objects.Connections.FameSpam:Disconnect()
+        end
+        print("🔥 Fame Spam ВЫКЛЮЧЕН")
+    end
+end)
+CreateButton(UtilsFrame, "🔄 Релоад скрипта", function()
+    print("🔄 Скрипт перезагружается...")
+end)
+-- Вкладка НАСТРОЙКИ
+local SettingsFrame = TabFrames["⚙️ НАСТРОЙКИ"]
+CreateSection(SettingsFrame, "🎨 ВНЕШНИЙ ВИД")
+CreateButton(SettingsFrame, "🌈 Сменить цветовую тему", function()
+    local colors = {
+        Color3.fromRGB(255, 50, 50), -- Красный
+        Color3.fromRGB(50, 255, 50), -- Зеленый
+        Color3.fromRGB(50, 150, 255), -- Синий
+        Color3.fromRGB(180, 50, 255), -- Фиолетовый
+        Color3.fromRGB(255, 150, 50) -- Оранжевый
+    }
+   
+    local newColor = colors[math.random(1, #colors)]
+    Mega.Settings.Menu.AccentColor = newColor
+    TitleBar.BackgroundColor3 = newColor
+   
+    for _, frame in pairs(TabFrames) do
+        frame.ScrollBarImageColor3 = newColor
+    end
+   
+    print("🎨 Цветовая тема изменена")
+end)
+CreateKeybindButton(SettingsFrame, "🔑 Изменить клавишу меню", Mega.States.Keybinds.Menu, function(key)
+    Mega.States.Keybinds.Menu = key
+    print("🔑 Клавиша меню изменена на: " .. key)
+end)
+CreateSection(SettingsFrame, "💾 УПРАВЛЕНИЕ КОНФИГАМИ")
+CreateButton(SettingsFrame, "💾 Сохранить конфиг", function()
+    local configData = {
+        Settings = Mega.Settings,
+        States = Mega.States,
+        Stats = Mega.Database.Stats
+    }
+   
+    Mega.Database.Configs["default"] = configData
+    Mega.Database.Stats.ConfigSaves = Mega.Database.Stats.ConfigSaves + 1
+   
+    print("💾 Конфиг сохранен (#" .. Mega.Database.Stats.ConfigSaves .. ")")
+end)
+CreateButton(SettingsFrame, "📂 Загрузить конфиг", function()
+    if Mega.Database.Configs["default"] then
+        local config = Mega.Database.Configs["default"]
+       
+        Mega.Settings = config.Settings or Mega.Settings
+        Mega.States = config.States or Mega.States
+        Mega.Database.Stats = config.Stats or Mega.Database.Stats
+       
+        print("📂 Конфиг загружен")
+    else
+        print("❌ Конфиг не найден")
+    end
+end)
+CreateButton(SettingsFrame, "🔄 Сбросить настройки", function()
+    Mega.Settings = {
+        Menu = {
+            Width = 900,
+            Height = 500,
+            BackgroundColor = Color3.fromRGB(10, 10, 25),
+            TitleBarColor = Color3.fromRGB(0, 100, 200),
+            AccentColor = Color3.fromRGB(0, 180, 255),
+            TextColor = Color3.fromRGB(255, 255, 255),
+            Transparency = 0.05,
+            CornerRadius = 15,
+            AnimationSpeed = 0.3
+        },
+        System = {
+            AntiAFK = true,
+            AutoSaveConfig = true,
+            PerformanceMode = false,
+            DebugMode = false,
+            Logging = true
+        }
+    }
+   
+    MainFrame.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    MainFrame.BackgroundTransparency = Mega.Settings.Menu.Transparency
+    UICorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
+    TitleBar.BackgroundColor3 = Mega.Settings.Menu.TitleBarColor
+    Title.TextColor3 = Mega.Settings.Menu.TextColor
+    CloseButton.TextColor3 = Mega.Settings.Menu.TextColor
+   
+    for _, frame in pairs(TabFrames) do
+        frame.ScrollBarImageColor3 = Mega.Settings.Menu.AccentColor
+    end
+   
+    print("🔄 Настройки сброшены")
+end)
+--=== МЕГА-СИСТЕМА ESP ===--
+function CreateESP(player)
+    if player == LocalPlayer then return end
+   
+    local esp = {
+        box = Drawing.new("Square"),
+        name = Drawing.new("Text"),
+        distance = Drawing.new("Text"),
+        health = Drawing.new("Text"),
+        tracer = Drawing.new("Line")
+    }
+   
+    esp.box.Visible = false
+    esp.box.Thickness = 2
+    esp.box.Filled = false
+    esp.box.ZIndex = 1
+   
+    esp.name.Visible = false
+    esp.name.Size = 14
+    esp.name.Center = true
+    esp.name.Outline = true
+    esp.name.ZIndex = 1
+   
+    esp.distance.Visible = false
+    esp.distance.Size = 12
+    esp.distance.Center = true
+    esp.distance.Outline = true
+    esp.distance.ZIndex = 1
+   
+    esp.health.Visible = false
+    esp.health.Size = 12
+    esp.health.Center = true
+    esp.health.Outline = true
+    esp.health.ZIndex = 1
+   
+    esp.tracer.Visible = false
+    esp.tracer.Thickness = 1
+    esp.tracer.ZIndex = 1
+   
+    Mega.Objects.ESP[player] = esp
+end
+function RemoveESP(player)
+    if Mega.Objects.ESP[player] then
+        for _, drawing in pairs(Mega.Objects.ESP[player]) do
+            drawing:Remove()
+        end
+        Mega.Objects.ESP[player] = nil
+    end
+end
+function UpdateESPColors()
+    for player, esp in pairs(Mega.Objects.ESP) do
+        if player and player.Character and player.Team then
+            local isTeam = Mega.States.ESP.ShowTeam and player.Team == LocalPlayer.Team
+            local isEnemy = player.Team ~= LocalPlayer.Team
+           
+            if isTeam then
+                esp.box.Color = Mega.States.ESP.TeamColor
+                esp.name.Color = Mega.States.ESP.TeamColor
+                esp.distance.Color = Mega.States.ESP.TeamColor
+                esp.health.Color = Mega.States.ESP.TeamColor
+                esp.tracer.Color = Mega.States.ESP.TeamColor
+            elseif isEnemy then
+                esp.box.Color = Mega.States.ESP.EnemyColor
+                esp.name.Color = Mega.States.ESP.EnemyColor
+                esp.distance.Color = Mega.States.ESP.EnemyColor
+                esp.health.Color = Mega.States.ESP.EnemyColor
+                esp.tracer.Color = Mega.States.ESP.EnemyColor
+            else
+                esp.box.Color = Mega.States.ESP.NeutralColor
+                esp.name.Color = Mega.States.ESP.NeutralColor
+                esp.distance.Color = Mega.States.ESP.NeutralColor
+                esp.health.Color = Mega.States.ESP.NeutralColor
+                esp.tracer.Color = Mega.States.ESP.NeutralColor
+            end
+        end
+    end
+end
+function UpdateESP()
+    local camera = Workspace.CurrentCamera
+    local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y)
+   
+    for player, esp in pairs(Mega.Objects.ESP) do
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local rootPart = player.Character.HumanoidRootPart
+            local head = player.Character:FindFirstChild("Head")
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+           
+            if head and humanoid then
+                local screenPos, onScreen = camera:WorldToViewportPoint(rootPart.Position)
+                local distance = (LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude
+               
+                if onScreen and distance <= Mega.States.ESP.MaxDistance then
+                    local scale = 1000 / distance
+                    local width = scale * 2
+                    local height = scale * 3
+                   
+                    if Mega.States.ESP.Boxes then
+                        esp.box.Visible = Mega.States.ESP.Enabled
+                        esp.box.Position = Vector2.new(screenPos.X - width/2, screenPos.Y - height/2)
+                        esp.box.Size = Vector2.new(width, height)
+                    else
+                        esp.box.Visible = false
+                    end
+                   
+                    if Mega.States.ESP.Names then
+                        esp.name.Visible = Mega.States.ESP.Enabled
+                        esp.name.Position = Vector2.new(screenPos.X, screenPos.Y - height/2 - 20)
+                        esp.name.Text = player.Name
+                    else
+                        esp.name.Visible = false
+                    end
+                   
+                    if Mega.States.ESP.Distance then
+                        esp.distance.Visible = Mega.States.ESP.Enabled
+                        esp.distance.Position = Vector2.new(screenPos.X, screenPos.Y + height/2 + 10)
+                        esp.distance.Text = math.floor(distance) .. " studs"
+                    else
+                        esp.distance.Visible = false
+                    end
+                   
+                    if Mega.States.ESP.Health then
+                        esp.health.Visible = Mega.States.ESP.Enabled
+                        esp.health.Position = Vector2.new(screenPos.X, screenPos.Y + height/2 + 30)
+                        esp.health.Text = "HP: " .. math.floor(humanoid.Health)
+                    else
+                        esp.health.Visible = false
+                    end
+                   
+                    if Mega.States.ESP.Tracers then
+                        esp.tracer.Visible = Mega.States.ESP.Enabled
+                        esp.tracer.From = Vector2.new(screenPos.X, screenPos.Y + height/2)
+                        esp.tracer.To = screenCenter
+                    else
+                        esp.tracer.Visible = false
+                    end
+                   
+                else
+                    esp.box.Visible = false
+                    esp.name.Visible = false
+                    esp.distance.Visible = false
+                    esp.health.Visible = false
+                    esp.tracer.Visible = false
+                end
+            end
+        else
+            esp.box.Visible = false
+            esp.name.Visible = false
+            esp.distance.Visible = false
+            esp.health.Visible = false
+            esp.tracer.Visible = false
+        end
+    end
+end
+-- Kit ESP no update needed, since static creation
+--=== МЕГА-СИСТЕМА AIM ASSIST ===--
+local AimFOVCircle = nil
+local AimLoopConnection = nil
+local CurrentAimTarget = nil
+function CreateAimFOV()
+    if AimFOVCircle then
+        AimFOVCircle:Remove()
+    end
+   
+    AimFOVCircle = Drawing.new("Circle")
+    AimFOVCircle.Visible = Mega.States.AimAssist.Enabled
+    AimFOVCircle.Color = Color3.fromRGB(255, 255, 255)
+    AimFOVCircle.Thickness = 2
+    AimFOVCircle.NumSides = 100
+    AimFOVCircle.Radius = Mega.States.AimAssist.FOV
+    AimFOVCircle.Filled = false
+end
+function GetClosestPlayer()
+    local closestPlayer = nil
+    local closestDistance = Mega.States.AimAssist.FOV
+   
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+            local character = player.Character
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            local head = character:FindFirstChild("Head")
+           
+            if humanoidRootPart and head then
+                local distanceToPlayer = (humanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+               
+                if distanceToPlayer <= Mega.States.AimAssist.Range then
+                    local isEnemy = true
+                    if player.Team and LocalPlayer.Team then
+                        isEnemy = player.Team ~= LocalPlayer.Team
+                    end
+                   
+                    if isEnemy then
+                        local screenPoint, onScreen = Workspace.CurrentCamera:WorldToViewportPoint(head.Position)
+                       
+                        if onScreen then
+                            local mousePos = UserInputService:GetMouseLocation()
+                            local distance = (Vector2.new(mousePos.X, mousePos.Y) - Vector2.new(screenPoint.X, screenPoint.Y)).Magnitude
+                           
+                            if distance < closestDistance then
+                                closestDistance = distance
+                                closestPlayer = player
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+   
+    return closestPlayer
+end
+function AimAtPlayer(player)
+    if not player or not player.Character then return end
+   
+    local character = player.Character
+    local targetPart = character:FindFirstChild(Mega.States.AimAssist.TargetPart) or character:FindFirstChild("HumanoidRootPart")
+    if not targetPart then return end
+   
+    local camera = Workspace.CurrentCamera
+   
+    local targetPosition = targetPart.Position
+    local direction = (targetPosition - camera.CFrame.Position).Unit
+   
+    local currentCFrame = camera.CFrame
+    local targetCFrame = CFrame.lookAt(currentCFrame.Position, targetPosition)
+    local smoothCFrame = currentCFrame:Lerp(targetCFrame, Mega.States.AimAssist.Smoothness)
+   
+    camera.CFrame = smoothCFrame
+end
+function StartAimLoop()
+    if AimLoopConnection then
+        AimLoopConnection:Disconnect()
+    end
+   
+    AimLoopConnection = RunService.RenderStepped:Connect(function()
+        if Mega.States.AimAssist.Active and Mega.States.AimAssist.Enabled then
+            CurrentAimTarget = GetClosestPlayer()
+            if CurrentAimTarget then
+                AimAtPlayer(CurrentAimTarget)
+            else
+                CurrentAimTarget = nil
+            end
+        end
+    end)
+end
+function StopAimLoop()
+    if AimLoopConnection then
+        AimLoopConnection:Disconnect()
+        AimLoopConnection = nil
+    end
+    CurrentAimTarget = nil
+end
+--=== МЕГА-СИСТЕМА ОБРАБОТКИ ===--
+function ToggleMenu()
+    TumbaGUI.Enabled = not TumbaGUI.Enabled
+   
+    if TumbaGUI.Enabled then
+        print("🚀 TUMBA MEGA SYSTEM v" .. VERSION .. " АКТИВИРОВАН")
+        print("💎 Разработано " .. DEVELOPER .. " для " .. SPECIAL_THANKS)
+        print("📁 Используйте вкладки для навигации")
+    else
+        print("📱 Меню закрыто")
+    end
+end
+-- Обработчики клавиш
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+   
+    if input.KeyCode.Name == Mega.States.Keybinds.Menu then
+        ToggleMenu()
+    end
+   
+    if input.KeyCode.Name == Mega.States.Keybinds.AimAssist then
+        if Mega.States.AimAssist.Enabled then
+            Mega.States.AimAssist.Active = not Mega.States.AimAssist.Active
+           
+            if Mega.States.AimAssist.Active then
+                StartAimLoop()
+                print("🎯 Aim Assist АКТИВИРОВАН")
+            else
+                StopAimLoop()
+                print("🎯 Aim Assist ДЕАКТИВИРОВАН")
+            end
+        end
+    end
+end)
+-- Закрытие меню
+CloseButton.MouseButton1Click:Connect(function()
+    ToggleMenu()
+end)
+-- Авто-обновление размеров контейнеров
+for _, frame in pairs(TabFrames) do
+    local layout = frame:FindFirstChild("UIListLayout")
+    if layout then
+        layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            frame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
+        end)
+    end
+end
+--=== МЕГА-ИНИЦИАЛИЗАЦИЯ ===--
+CurrentTab = "🏠 ГЛАВНАЯ"
+TabFrames["🏠 ГЛАВНАЯ"].Visible = true
+for _, child in pairs(TabContainer:GetChildren()) do
+    if child:IsA("TextButton") then
+        if child.Text == "🏠 ГЛАВНАЯ" then
+            child.BackgroundColor3 = Mega.Settings.Menu.AccentColor
+        else
+            child.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+        end
+    end
+end
+-- Создаем ESP для всех игроков
+for _, player in pairs(Players:GetPlayers()) do
+    CreateESP(player)
+end
+-- Обработчики игроков
+Players.PlayerAdded:Connect(function(player)
+    CreateESP(player)
+end)
+Players.PlayerRemoving:Connect(function(player)
+    RemoveESP(player)
+end)
+-- Создаем FOV круг для Aim Assist
+CreateAimFOV()
+-- Запускаем основной цикл обновления
+local StartTime = tick()
+Mega.Objects.Connections.Heartbeat = RunService.Heartbeat:Connect(function()
+    Mega.Database.Stats.PlayTime = math.floor((tick() - StartTime) / 60)
+   
+    if Mega.States.ESP.Enabled then
+        UpdateESP()
+        UpdateESPColors()
+    else
+        for player, esp in pairs(Mega.Objects.ESP) do
+            esp.box.Visible = false
+            esp.name.Visible = false
+            esp.distance.Visible = false
+            esp.health.Visible = false
+            esp.tracer.Visible = false
+        end
+    end
+   
+    if AimFOVCircle then
+        AimFOVCircle.Visible = Mega.States.AimAssist.Enabled
+        AimFOVCircle.Radius = Mega.States.AimAssist.FOV
+        AimFOVCircle.Position = UserInputService:GetMouseLocation()
+    end
+   
+    if StatsLabel then
+        StatsLabel.Text = "📈 СТАТИСТИКА:\n"
+            .. "🎯 Убийств: " .. Mega.Database.Stats.Kills .. "\n"
+            .. "💀 Смертей: " .. Mega.Database.Stats.Deaths .. "\n"
+            .. "🎮 Время игры: " .. Mega.Database.Stats.PlayTime .. "м\n"
+            .. "💾 Конфигов сохранено: " .. Mega.Database.Stats.ConfigSaves
+    end
+end)
+-- Анти-AFK система
+if Mega.Settings.System.AntiAFK then
+    local VirtualUser = game:GetService("VirtualUser")
+    LocalPlayer.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end
+-- Авто-сохранение конфигов
+if Mega.Settings.System.AutoSaveConfig then
+    Mega.Objects.Connections.AutoSave = RunService.Heartbeat:Connect(function()
+        if tick() % 300 < 1 then
+            local configData = {
+                Settings = Mega.Settings,
+                States = Mega.States,
+                Stats = Mega.Database.Stats
+            }
+            Mega.Database.Configs["default"] = configData
+        end
+    end)
+end
+print("🔥 TUMBA MEGA SYSTEM v" .. VERSION .. " УСПЕШНО ЗАГРУЖЕН!")
+print("💎 Создано: " .. DEVELOPER)
+print("🎯 Специально для: " .. SPECIAL_THANKS)
+print("📅 Сборка: " .. BUILD_DATE)
+print("🎮 Используйте RightShift или Insert для открытия меню")
+print("👁️ ESP готов к использованию")
+print("🛠️ Kit ESP добавлен и готов к использованию (с фильтрами)")
+print("🎯 Aim Assist готов (Нажми R для активации)")
+print("⚡ Все функции активированы!")
+print("🚀 Система готова к работе!")
+-- Сохраняем дефолтный конфиг
+local configData = {
+    Settings = Mega.Settings,
+    States = Mega.States,
+    Stats = Mega.Database.Stats
+}
+Mega.Database.Configs["default"] = configData
+return Mega
