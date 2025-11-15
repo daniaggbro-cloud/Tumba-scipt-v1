@@ -30,22 +30,24 @@ local SPECIAL_THANKS = "N.User-1"
 local Mega = {
     Settings = {
         Menu = {
-            Width = 900,
-            Height = 500,
-            BackgroundColor = Color3.fromRGB(10, 10, 25),
-            TitleBarColor = Color3.fromRGB(0, 100, 200),
-            AccentColor = Color3.fromRGB(0, 180, 255),
+            Width = 950,
+            Height = 550,
+            BackgroundColor = Color3.fromRGB(15, 15, 20),
+            TitleBarColor = Color3.fromRGB(20, 25, 35),
+            AccentColor = Color3.fromRGB(0, 200, 255),
+            SecondaryColor = Color3.fromRGB(100, 50, 255),
             TextColor = Color3.fromRGB(255, 255, 255),
-            Transparency = 0.05,
-            CornerRadius = 15,
-            AnimationSpeed = 0.3
+            Transparency = 0.02,
+            CornerRadius = 12,
+            AnimationSpeed = 0.25
         },
         System = {
             AntiAFK = true,
             AutoSaveConfig = true,
             PerformanceMode = false,
             DebugMode = false,
-            Logging = true
+            Logging = true,
+            ShowStatusIndicator = true
         }
     },
     States = {
@@ -109,6 +111,12 @@ local Mega = {
             KnockbackStrength = 50,
             FastBreak = false,
             BreakSpeed = 3,
+            LongJump = false,
+            LongJumpPower = 50,
+            HighJump = false,
+            HighJumpPower = 50,
+            Sprint = false,
+            NoFall = false,
             FollowTarget = nil
         },
         Combat = {
@@ -197,6 +205,7 @@ local Mega = {
             ["section_status"] = { ru = "💎 СИСТЕМНЫЙ СТАТУС", en = "💎 SYSTEM STATUS", es = "💎 ESTADO DEL SISTEMA", pt = "💎 STATUS DO SISTEMA", ko = "💎 시스템 상태", ja = "💎 システムステータス" },
             ["toggle_autosave"] = { ru = "🔄 Авто-сохранение конфигов", en = "🔄 Auto-save configs", es = "🔄 Guardado automático de configuraciones", pt = "🔄 Salvar configs automaticamente", ko = "🔄 자동 저장 설정", ja = "🔄 自動保存設定" },
             ["toggle_perf_mode"] = { ru = "⚡ Режим производительности", en = "⚡ Performance Mode", es = "⚡ Modo de rendimiento", pt = "⚡ Modo de desempenho", ko = "⚡ 성능 모드", ja = "⚡ パフォーマンスモード" },
+            ["toggle_status_indicator"] = { ru = "📊 Показывать индикатор функций", en = "📊 Show Status Indicator", es = "📊 Mostrar Indicador de Estado", pt = "📊 Mostrar Indicador de Status", ko = "📊 상태 표시기 표시", ja = "📊 ステータスインジケーター表示" },
             ["section_quick_access"] = { ru = "🚀 БЫСТРЫЙ ДОСТУП", en = "🚀 QUICK ACCESS", es = "🚀 ACCESO RÁPIDO", pt = "🚀 ACESSO RÁPIDO", ko = "🚀 빠른 액세스", ja = "🚀 クイックアクセス" },
             ["button_esp_toggle"] = { ru = "👁️ ВКЛ/ВЫКЛ ESP", en = "👁️ TOGGLE ESP", es = "👁️ ACTIVAR/DESACTIVAR ESP", pt = "👁️ LIGAR/DESLIGAR ESP", ko = "👁️ ESP 토글", ja = "👁️ ESP トグル" },
             ["button_aim_toggle"] = { ru = "🎯 ВКЛ/ВЫКЛ Aim Assist", en = "🎯 TOGGLE Aim Assist", es = "🎯 ACTIVAR/DESACTIVAR Ayuda de puntería", pt = "🎯 LIGAR/DESLIGAR Assistência de Mira", ko = "🎯 조준 보조 토글", ja = "🎯 エイムアシスト トグル" },
@@ -293,11 +302,25 @@ local Mega = {
             -- Вкладка: Настройки
             ["section_settings_appearance"] = { ru = "🎨 ВНЕШНИЙ ВИД", en = "🎨 APPEARANCE", es = "🎨 APARIENCIA", pt = "🎨 APARECÊNCIA", ko = "🎨 외관", ja = "🎨 外観" },
             ["button_change_theme"] = { ru = "🌈 Сменить цветовую тему", en = "🌈 Change Color Theme", es = "🌈 Cambiar Tema de Color", pt = "🌈 Alterar Tema de Cor", ko = "🌈 색상 테마 변경", ja = "🌈 カラーテーマ変更" },
+            ["dropdown_language"] = { ru = "Язык интерфейса", en = "Interface Language", es = "Idioma de Interfaz", pt = "Idioma da Interface", ko = "인터페이스 언어", ja = "インターフェース言語" },
+            ["language_english"] = { ru = "English (Английский)", en = "English", es = "English (Inglés)", pt = "English (Inglês)", ko = "English (영어)", ja = "English (英語)" },
+            ["language_russian"] = { ru = "Русский", en = "Russian (Русский)", es = "Ruso (Русский)", pt = "Russo (Русский)", ko = "Russian (러시아어)", ja = "Russian (ロシア語)" },
+            ["language_spanish"] = { ru = "Español (Испанский)", en = "Spanish (Español)", es = "Español", pt = "Espanhol (Español)", ko = "Spanish (스페인어)", ja = "Spanish (スペイン語)" },
+            ["language_portuguese"] = { ru = "Português (Португальский)", en = "Portuguese (Português)", es = "Portugués (Português)", pt = "Português", ko = "Portuguese (포르투갈어)", ja = "Portuguese (ポルトガル語)" },
+            ["language_korean"] = { ru = "한국어 (Корейский)", en = "Korean (한국어)", es = "Coreano (한국어)", pt = "Coreano (한국어)", ko = "한국어", ja = "Korean (韓国語)" },
+            ["language_japanese"] = { ru = "日本語 (Японский)", en = "Japanese (日本語)", es = "Japonés (日本語)", pt = "Japonês (日本語)", ko = "Japanese (일본어)", ja = "日本語" },
+            ["notify_language_changed"] = { ru = "🌍 Язык изменен на: %s", en = "🌍 Language changed to: %s", es = "🌍 Idioma cambiado a: %s", pt = "🌍 Idioma alterado para: %s", ko = "🌍 언어 변경됨: %s", ja = "🌍 言語変更: %s" },
             ["keybind_menu"] = { ru = "🔑 Изменить клавишу меню", en = "🔑 Change Menu Key", es = "🔑 Cambiar Tecla del Menú", pt = "🔑 Alterar Tecla do Menu", ko = "🔑 메뉴 키 변경", ja = "🔑 メニューキー変更" },
             ["section_settings_config"] = { ru = "💾 УПРАВЛЕНИЕ КОНФИГАМИ", en = "💾 CONFIG MANAGEMENT", es = "💾 GESTIÓN DE CONFIGURACIONES", pt = "💾 GERENCIAMENTO DE CONFIG", ko = "💾 설정 관리", ja = "💾 設定管理" },
+            ["textbox_config_name"] = { ru = "Введите имя конфига...", en = "Enter config name...", es = "Introduce nombre de config...", pt = "Digite nome do config...", ko = "설정 이름 입력...", ja = "設定名を入力..." },
             ["button_config_save"] = { ru = "💾 Сохранить конфиг", en = "💾 Save Config", es = "💾 Guardar Configuración", pt = "💾 Salvar Configuração", ko = "💾 설정 저장", ja = "💾 設定保存" },
+            ["dropdown_config_list"] = { ru = "Выберите конфиг", en = "Select Config", es = "Seleccionar Configuración", pt = "Selecionar Configuração", ko = "설정 선택", ja = "設定選択" },
             ["button_config_load"] = { ru = "📂 Загрузить конфиг", en = "📂 Load Config", es = "📂 Cargar Configuración", pt = "📂 Carregar Configuração", ko = "📂 설정 로드", ja = "📂 設定読み込み" },
+            ["button_config_delete"] = { ru = "🗑️ Удалить конфиг", en = "🗑️ Delete Config", es = "🗑️ Eliminar Configuración", pt = "🗑️ Deletar Configuração", ko = "🗑️ 설정 삭제", ja = "🗑️ 設定削除" },
+            ["button_config_refresh"] = { ru = "🔄 Обновить список", en = "🔄 Refresh List", es = "🔄 Actualizar Lista", pt = "🔄 Atualizar Lista", ko = "🔄 목록 새로고침", ja = "🔄 リスト更新" },
             ["button_config_reset"] = { ru = "🔄 Сбросить настройки", en = "🔄 Reset Settings", es = "🔄 Restablecer Configuraciones", pt = "🔄 Redefinir Configurações", ko = "🔄 설정 초기화", ja = "🔄 設定リセット" },
+            ["notify_config_deleted"] = { ru = "🗑️ Конфиг удален", en = "🗑️ Config deleted", es = "🗑️ Configuración eliminada", pt = "🗑️ Configuração deletada", ko = "🗑️ 설정 삭제됨", ja = "🗑️ 設定削除" },
+            ["notify_enter_name"] = { ru = "⚠️ Введите имя конфига!", en = "⚠️ Enter config name!", es = "⚠️ ¡Introduce nombre!", pt = "⚠️ Digite o nome!", ko = "⚠️ 이름 입력!", ja = "⚠️ 名前を入力!" },
             ["button_cleanup"] = { ru = "🗑️ Очистить и выгрузить скрипт", en = "🗑️ Cleanup and Unload Script", es = "🗑️ Limpiar y Descargar Script", pt = "🗑️ Limpar e Descarregar Script", ko = "🗑️ 정리 및 스크립트 언로드", ja = "🗑️ クリーンアップとスクリプトアンロード" },
 
             -- Вкладка: Игроки
@@ -513,40 +536,54 @@ local function InitializeMainGUI()
             hidden = false
         end
     end
-    --=== МЕГА-ИНТЕРФЕЙС ===--
+    --=== VAPE STYLE UI ===--
     local TumbaGUI = Instance.new("ScreenGui")
     TumbaGUI.Name = "TumbaMegaSystem"
     TumbaGUI.Parent = CoreGui
     TumbaGUI.Enabled = false
+    TumbaGUI.ResetOnSpawn = false
     espfold.Parent = TumbaGUI
+    
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
-    MainFrame.Size = UDim2.new(0, Mega.Settings.Menu.Width, 0, Mega.Settings.Menu.Height)
-    MainFrame.Position = UDim2.new(0.5, -Mega.Settings.Menu.Width / 2, 0.5, -Mega.Settings.Menu.Height / 2)
-    MainFrame.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
-    MainFrame.BackgroundTransparency = Mega.Settings.Menu.Transparency
-    MainFrame.BorderSizePixel = 0
+    MainFrame.Size = UDim2.new(0, 1100, 0, 650)
+    MainFrame.Position = UDim2.new(0.5, -550, 0.5, -325)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
+    MainFrame.BackgroundTransparency = 0.02
+    MainFrame.BorderSizePixel = 2
+    MainFrame.BorderColor3 = Color3.fromRGB(255, 50, 50)
     MainFrame.Active = true
     MainFrame.Draggable = true
+    MainFrame.ClipsDescendants = false
     local UICorner = Instance.new("UICorner")
     UICorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
     UICorner.Parent = MainFrame
-    -- Тень
+    -- Современная тень с glow
     local Shadow = Instance.new("ImageLabel")
     Shadow.Name = "Shadow"
-    Shadow.Size = UDim2.new(1, 20, 1, 20)
-    Shadow.Position = UDim2.new(0, -10, 0, -10)
+    Shadow.Size = UDim2.new(1, 40, 1, 40)
+    Shadow.Position = UDim2.new(0, -20, 0, -20)
     Shadow.BackgroundTransparency = 1
     Shadow.Image = "rbxassetid://1316045217"
-    Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-    Shadow.ImageTransparency = 0.8
+    Shadow.ImageColor3 = Color3.fromRGB(0, 200, 255)
+    Shadow.ImageTransparency = 0.7
     Shadow.ScaleType = Enum.ScaleType.Slice
     Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    Shadow.ZIndex = 0
     Shadow.Parent = MainFrame
-    -- Title Bar
+    
+    -- Градиент фона
+    local MainGradient = Instance.new("UIGradient")
+    MainGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 12, 18)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 18, 25))
+    }
+    MainGradient.Rotation = 135
+    MainGradient.Parent = MainFrame
+    -- Title Bar с градиентом
     local TitleBar = Instance.new("Frame")
     TitleBar.Name = "TitleBar"
-    TitleBar.Size = UDim2.new(1, 0, 0, 50)
+    TitleBar.Size = UDim2.new(1, 0, 0, 55)
     TitleBar.Position = UDim2.new(0, 0, 0, 0)
     TitleBar.BackgroundColor3 = Mega.Settings.Menu.TitleBarColor
     TitleBar.BorderSizePixel = 0
@@ -555,55 +592,224 @@ local function InitializeMainGUI()
     local TitleCorner = Instance.new("UICorner")
     TitleCorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
     TitleCorner.Parent = TitleBar
+    
+    -- Градиент для Title Bar (красный стиль Vape)
+    local TitleGradient = Instance.new("UIGradient")
+    TitleGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 50, 50)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 30, 30)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
+    }
+    TitleGradient.Rotation = 90
+    TitleGradient.Parent = TitleBar
     local Title = Instance.new("TextLabel")
     Title.Name = "Title"
     Title.Size = UDim2.new(1, -100, 1, 0)
-    Title.Position = UDim2.new(0, 15, 0, 0)
+    Title.Position = UDim2.new(0, 20, 0, 0)
     Title.BackgroundTransparency = 1
-    Title.Text = GetText("title_bar", VERSION) -- ИЗМЕНЕНО
-    Title.TextColor3 = Mega.Settings.Menu.TextColor
-    Title.TextSize = 18
+    Title.Text = GetText("title_bar", VERSION)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 20
     Title.Font = Enum.Font.GothamBold
+    Title.TextStrokeTransparency = 0.7
     Title.TextXAlignment = Enum.TextXAlignment.Left
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "CloseButton"
-    CloseButton.Size = UDim2.new(0, 35, 0, 35)
-    CloseButton.Position = UDim2.new(1, -40, 0, 7)
-    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 80)
+    CloseButton.Size = UDim2.new(0, 38, 0, 38)
+    CloseButton.Position = UDim2.new(1, -45, 0, 8)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 70)
+    CloseButton.BackgroundTransparency = 0.1
     CloseButton.BorderSizePixel = 0
     CloseButton.Text = "✕"
-    CloseButton.TextColor3 = Mega.Settings.Menu.TextColor
-    CloseButton.TextSize = 18
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 20
     CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.AutoButtonColor = false
     local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0, 8)
+    CloseCorner.CornerRadius = UDim.new(0, 10)
     CloseCorner.Parent = CloseButton
-    -- Система вкладок
-    local TabContainer = Instance.new("Frame")
+    
+    CloseButton.MouseEnter:Connect(function()
+        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 80, 100)}):Play()
+    end)
+    CloseButton.MouseLeave:Connect(function()
+        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 70)}):Play()
+    end)
+    -- === БОКОВОЕ МЕНЮ (SIDEBAR) СЛЕВА ===
+    local Sidebar = Instance.new("Frame")
+    Sidebar.Name = "Sidebar"
+    Sidebar.Size = UDim2.new(0, 200, 1, -65)
+    Sidebar.Position = UDim2.new(0, 10, 0, 60)
+    Sidebar.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    Sidebar.BackgroundTransparency = 0.3
+    Sidebar.BorderSizePixel = 0
+    
+    local SidebarCorner = Instance.new("UICorner")
+    SidebarCorner.CornerRadius = UDim.new(0, 8)
+    SidebarCorner.Parent = Sidebar
+    
+    local TabContainer = Instance.new("ScrollingFrame")
     TabContainer.Name = "TabContainer"
-    TabContainer.Size = UDim2.new(1, -20, 0, 40)
-    TabContainer.Position = UDim2.new(0, 10, 0, 60)
+    TabContainer.Size = UDim2.new(1, -10, 1, -10)
+    TabContainer.Position = UDim2.new(0, 5, 0, 5)
     TabContainer.BackgroundTransparency = 1
+    TabContainer.BorderSizePixel = 0
+    TabContainer.ScrollBarThickness = 0
+    TabContainer.Parent = Sidebar
+    
     local TabList = Instance.new("UIListLayout")
     TabList.Parent = TabContainer
-    TabList.FillDirection = Enum.FillDirection.Horizontal
-    TabList.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    TabList.VerticalAlignment = Enum.VerticalAlignment.Center
-    TabList.Padding = UDim.new(0, 5)
-    -- Контейнеры контента
+    TabList.FillDirection = Enum.FillDirection.Vertical
+    TabList.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    TabList.Padding = UDim.new(0, 3)
+    
+    -- Контейнер контента (СПРАВА от sidebar)
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = "ContentContainer"
-    ContentContainer.Size = UDim2.new(1, -20, 1, -120)
-    ContentContainer.Position = UDim2.new(0, 10, 0, 110)
+    ContentContainer.Size = UDim2.new(1, -230, 1, -70)
+    ContentContainer.Position = UDim2.new(0, 220, 0, 60)
     ContentContainer.BackgroundTransparency = 1
     -- Собираем GUI
     MainFrame.Parent = TumbaGUI
     TitleBar.Parent = MainFrame
     Title.Parent = TitleBar
     CloseButton.Parent = TitleBar
-    TabContainer.Parent = MainFrame
+    Sidebar.Parent = MainFrame
     ContentContainer.Parent = MainFrame
     Mega.Objects.GUI = TumbaGUI
+    
+    -- === ИНДИКАТОР АКТИВНЫХ ФУНКЦИЙ (ПРАВЫЙ ВЕРХНИЙ УГОЛ) ===
+    local StatusGUI = Instance.new("ScreenGui")
+    StatusGUI.Name = "TumbaStatusIndicator"
+    StatusGUI.Parent = CoreGui
+    StatusGUI.ResetOnSpawn = false
+    StatusGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    local StatusIndicator = Instance.new("Frame")
+    StatusIndicator.Name = "StatusIndicator"
+    StatusIndicator.Size = UDim2.new(0, 240, 0, 0)
+    StatusIndicator.Position = UDim2.new(1, -250, 0, 10)
+    StatusIndicator.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    StatusIndicator.BackgroundTransparency = 0.05
+    StatusIndicator.BorderSizePixel = 2
+    StatusIndicator.BorderColor3 = Color3.fromRGB(0, 200, 255)
+    StatusIndicator.Parent = StatusGUI
+    
+    local StatusCorner = Instance.new("UICorner")
+    StatusCorner.CornerRadius = UDim.new(0, 10)
+    StatusCorner.Parent = StatusIndicator
+    
+    local StatusGradient = Instance.new("UIGradient")
+    StatusGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 15, 20)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 30, 40))
+    }
+    StatusGradient.Rotation = 135
+    StatusGradient.Parent = StatusIndicator
+    
+    local StatusTitle = Instance.new("TextLabel")
+    StatusTitle.Name = "Title"
+    StatusTitle.Size = UDim2.new(1, 0, 0, 32)
+    StatusTitle.Position = UDim2.new(0, 0, 0, 0)
+    StatusTitle.BackgroundTransparency = 1
+    StatusTitle.Text = "⚡ ACTIVE FEATURES ⚡"
+    StatusTitle.TextColor3 = Color3.fromRGB(0, 220, 255)
+    StatusTitle.TextSize = 15
+    StatusTitle.Font = Enum.Font.GothamBold
+    StatusTitle.TextStrokeTransparency = 0.5
+    StatusTitle.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    StatusTitle.Parent = StatusIndicator
+    
+    local StatusList = Instance.new("Frame")
+    StatusList.Name = "List"
+    StatusList.Size = UDim2.new(1, -20, 1, -40)
+    StatusList.Position = UDim2.new(0, 10, 0, 35)
+    StatusList.BackgroundTransparency = 1
+    StatusList.ClipsDescendants = false
+    StatusList.Parent = StatusIndicator
+    
+    local StatusLayout = Instance.new("UIListLayout")
+    StatusLayout.Parent = StatusList
+    StatusLayout.FillDirection = Enum.FillDirection.Vertical
+    StatusLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    StatusLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+    StatusLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    StatusLayout.Padding = UDim.new(0, 2)
+    
+    local function UpdateStatusIndicator()
+        if not Mega.Settings.System.ShowStatusIndicator then
+            StatusIndicator.Visible = false
+            return
+        end
+        
+        for _, child in pairs(StatusList:GetChildren()) do
+            if child:IsA("TextLabel") then
+                child:Destroy()
+            end
+        end
+        
+        local activeCount = 0
+        
+        local function AddStatus(text, color)
+            local StatusItem = Instance.new("TextLabel")
+            StatusItem.Name = "StatusItem" .. activeCount
+            StatusItem.Size = UDim2.new(1, 0, 0, 20)
+            StatusItem.BackgroundTransparency = 1
+            StatusItem.Text = "▸ " .. text
+            StatusItem.TextColor3 = color or Color3.fromRGB(0, 255, 100)
+            StatusItem.TextSize = 12
+            StatusItem.Font = Enum.Font.GothamBold
+            StatusItem.TextStrokeTransparency = 0.5
+            StatusItem.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            StatusItem.TextXAlignment = Enum.TextXAlignment.Left
+            StatusItem.TextYAlignment = Enum.TextYAlignment.Top
+            StatusItem.LayoutOrder = activeCount
+            StatusItem.Parent = StatusList
+            activeCount = activeCount + 1
+        end
+        
+        if Mega.States.ESP.Enabled then
+            AddStatus("ESP", Color3.fromRGB(0, 255, 100))
+        end
+        if Mega.States.KitESP.Enabled then
+            AddStatus("Kit ESP", Color3.fromRGB(255, 165, 0))
+        end
+        if Mega.States.AimAssist.Enabled then
+            AddStatus("Aim Assist", Color3.fromRGB(255, 50, 100))
+        end
+        if Mega.States.Player.Speed then
+            AddStatus("Speed x" .. Mega.States.Player.SpeedValue, Color3.fromRGB(255, 255, 0))
+        end
+        if Mega.States.Player.Fly then
+            AddStatus("Fly", Color3.fromRGB(100, 200, 255))
+        end
+        if Mega.States.Player.InfiniteJump then
+            AddStatus("Inf Jump", Color3.fromRGB(200, 150, 255))
+        end
+        if Mega.States.Player.NoClip then
+            AddStatus("NoClip", Color3.fromRGB(150, 255, 150))
+        end
+        if Mega.States.Player.AntiKnockback then
+            AddStatus("Anti-KB " .. Mega.States.Player.KnockbackStrength .. "%", Color3.fromRGB(255, 200, 0))
+        end
+        if Mega.States.Player.FastBreak then
+            AddStatus("Fast Break x" .. Mega.States.Player.BreakSpeed, Color3.fromRGB(255, 150, 50))
+        end
+        if Mega.States.Visuals.FullBright then
+            AddStatus("FullBright", Color3.fromRGB(255, 255, 150))
+        end
+        if Mega.States.Visuals.NoFog then
+            AddStatus("No Fog", Color3.fromRGB(150, 200, 255))
+        end
+        
+        if activeCount == 0 then
+            StatusIndicator.Visible = false
+        else
+            StatusIndicator.Visible = true
+            local newHeight = 40 + (activeCount * 22)
+            StatusIndicator.Size = UDim2.new(0, 240, 0, newHeight)
+        end
+    end
     --=== 
     --=== МЕГА-СИСТЕМА ВКЛАДОК ===--
     -- ИЗМЕНЕНО: Используем ключи
@@ -620,22 +826,48 @@ local function InitializeMainGUI()
     }
     local CurrentTab = GetText("tab_home") -- ИЗМЕНЕНО
     local TabFrames = {}
-    -- Функция создания вкладки
+    -- Функция создания вкладки (ВЕРТИКАЛЬНАЯ КНОПКА)
     local function CreateTab(tabName)
         local TabButton = Instance.new("TextButton")
         TabButton.Name = tabName .. "Tab"
-        TabButton.Size = UDim2.new(0, 100, 0, 35)
-        TabButton.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+        TabButton.Size = UDim2.new(1, -10, 0, 42)
+        TabButton.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+        TabButton.BackgroundTransparency = 0.3
         TabButton.BorderSizePixel = 0
-        TabButton.Text = tabName -- tabName уже переведен
-        TabButton.TextColor3 = Mega.Settings.Menu.TextColor
-        TabButton.TextSize = 12
-        TabButton.Font = Enum.Font.GothamSemibold
+        TabButton.Text = tabName
+        TabButton.TextColor3 = Color3.fromRGB(180, 180, 200)
+        TabButton.TextSize = 14
+        TabButton.Font = Enum.Font.GothamBold
+        TabButton.TextXAlignment = Enum.TextXAlignment.Left
         TabButton.AutoButtonColor = false
 
         local TabCorner = Instance.new("UICorner")
-        TabCorner.CornerRadius = UDim.new(0, 8)
+        TabCorner.CornerRadius = UDim.new(0, 6)
+        TabButton.Parent = TabContainer
         TabCorner.Parent = TabButton
+        
+        -- Отступ текста слева
+        local Padding = Instance.new("UIPadding")
+        Padding.PaddingLeft = UDim.new(0, 15)
+        Padding.Parent = TabButton
+        
+        TabButton.MouseEnter:Connect(function()
+            if TabButton.BackgroundColor3 ~= Mega.Settings.Menu.AccentColor then
+                TweenService:Create(TabButton, TweenInfo.new(0.2), {
+                    BackgroundTransparency = 0.1,
+                    TextColor3 = Color3.fromRGB(255, 255, 255)
+                }):Play()
+            end
+        end)
+        
+        TabButton.MouseLeave:Connect(function()
+            if TabButton.BackgroundColor3 ~= Mega.Settings.Menu.AccentColor then
+                TweenService:Create(TabButton, TweenInfo.new(0.2), {
+                    BackgroundTransparency = 0.3,
+                    TextColor3 = Color3.fromRGB(180, 180, 200)
+                }):Play()
+            end
+        end)
 
         local ContentFrame = Instance.new("ScrollingFrame")
         ContentFrame.Name = tabName .. "Content"
@@ -670,9 +902,17 @@ local function InitializeMainGUI()
             for _, child in pairs(TabContainer:GetChildren()) do
                 if child:IsA("TextButton") then
                     if child.Text == tabName then
-                        child.BackgroundColor3 = Mega.Settings.Menu.AccentColor
+                        TweenService:Create(child, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                            BackgroundColor3 = Mega.Settings.Menu.AccentColor,
+                            BackgroundTransparency = 0,
+                            TextColor3 = Color3.fromRGB(255, 255, 255)
+                        }):Play()
                     else
-                        child.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+                        TweenService:Create(child, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                            BackgroundColor3 = Color3.fromRGB(25, 30, 40),
+                            BackgroundTransparency = 0.3,
+                            TextColor3 = Color3.fromRGB(180, 180, 200)
+                        }):Play()
                     end
                 end
             end
@@ -693,23 +933,33 @@ local function InitializeMainGUI()
     local function CreateSection(parent, titleKey)
         local Section = Instance.new("Frame")
         Section.Name = titleKey .. "Section"
-        Section.Size = UDim2.new(0.95, 0, 0, 40)
-        Section.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-        Section.BorderSizePixel = 0
+        Section.Size = UDim2.new(0.95, 0, 0, 45)
+        Section.BackgroundColor3 = Color3.fromRGB(25, 30, 42)
+        Section.BorderSizePixel = 1
+        Section.BorderColor3 = Color3.fromRGB(0, 200, 255)
 
         local SectionCorner = Instance.new("UICorner")
-        SectionCorner.CornerRadius = UDim.new(0, 8)
+        SectionCorner.CornerRadius = UDim.new(0, 10)
         SectionCorner.Parent = Section
+        
+        local SectionGradient = Instance.new("UIGradient")
+        SectionGradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 30, 42)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 35, 50))
+        }
+        SectionGradient.Rotation = 45
+        SectionGradient.Parent = Section
 
         local SectionTitle = Instance.new("TextLabel")
         SectionTitle.Name = "SectionTitle"
         SectionTitle.Size = UDim2.new(1, -20, 1, 0)
-        SectionTitle.Position = UDim2.new(0, 10, 0, 0)
+        SectionTitle.Position = UDim2.new(0, 15, 0, 0)
         SectionTitle.BackgroundTransparency = 1
-        SectionTitle.Text = "🔹 " .. GetText(titleKey) -- ИЗМЕНЕНО
-        SectionTitle.TextColor3 = Mega.Settings.Menu.TextColor
-        SectionTitle.TextSize = 14
+        SectionTitle.Text = "💠 " .. GetText(titleKey)
+        SectionTitle.TextColor3 = Color3.fromRGB(0, 220, 255)
+        SectionTitle.TextSize = 15
         SectionTitle.Font = Enum.Font.GothamBold
+        SectionTitle.TextStrokeTransparency = 0.8
         SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
 
         SectionTitle.Parent = Section
@@ -928,11 +1178,11 @@ local function InitializeMainGUI()
         DropdownButton.Name = "Button"
         DropdownButton.Size = UDim2.new(0.4, 0, 1, 0)
         DropdownButton.Position = UDim2.new(0.6, 0, 0, 0)
-        DropdownButton.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
+        DropdownButton.BackgroundColor3 = Color3.fromRGB(50, 55, 70)
         DropdownButton.BorderSizePixel = 0
         -- ИЗМЕНЕНО: Переводим initialValue, если это ключ
         DropdownButton.Text = optionsAreKeys and GetText(initialValue) or initialValue
-        DropdownButton.TextColor3 = Mega.Settings.Menu.TextColor
+        DropdownButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         DropdownButton.TextSize = 11
         DropdownButton.Font = Enum.Font.GothamBold
         DropdownButton.AutoButtonColor = false
@@ -945,9 +1195,10 @@ local function InitializeMainGUI()
         DropdownList.Name = "List"
         DropdownList.Size = UDim2.new(0.4, 0, 0, 1)
         DropdownList.Position = UDim2.new(0.6, 0, 1, 5)
-        DropdownList.BackgroundTransparency = 0.1
-        DropdownList.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
-        DropdownList.BorderSizePixel = 0
+        DropdownList.BackgroundTransparency = 0
+        DropdownList.BackgroundColor3 = Color3.fromRGB(30, 35, 45)
+        DropdownList.BorderSizePixel = 1
+        DropdownList.BorderColor3 = Color3.fromRGB(0, 180, 255)
         DropdownList.ScrollBarThickness = 4
         DropdownList.ScrollBarImageColor3 = Mega.Settings.Menu.AccentColor
         DropdownList.Visible = false
@@ -967,17 +1218,37 @@ local function InitializeMainGUI()
 
             local ListItem = Instance.new("TextButton")
             ListItem.Name = "Item" .. i
-            ListItem.Size = UDim2.new(1, 0, 0, 30)
-            ListItem.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
-            ListItem.BorderSizePixel = 0
-            ListItem.Text = translatedOption -- ИЗМЕНЕНО
-            ListItem.TextColor3 = Mega.Settings.Menu.TextColor
-            ListItem.TextSize = 11
-            ListItem.Font = Enum.Font.Gotham
+            ListItem.Size = UDim2.new(1, -8, 0, 32)
+            ListItem.Position = UDim2.new(0, 4, 0, 0)
+            ListItem.BackgroundColor3 = Color3.fromRGB(60, 70, 90)
+            ListItem.BackgroundTransparency = 0
+            ListItem.BorderSizePixel = 1
+            ListItem.BorderColor3 = Color3.fromRGB(80, 90, 110)
+            ListItem.Text = translatedOption or "???"
+            ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
+            ListItem.TextSize = 14
+            ListItem.Font = Enum.Font.GothamBold
+            ListItem.TextStrokeTransparency = 0.5
+            ListItem.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
             ListItem.AutoButtonColor = false
+            ListItem.ZIndex = 4
             ListItem.Parent = DropdownList
 
-            listHeight = listHeight + 30 + 1
+            listHeight = listHeight + 32 + 2
+            
+            local ItemCorner = Instance.new("UICorner")
+            ItemCorner.CornerRadius = UDim.new(0, 4)
+            ItemCorner.Parent = ListItem
+            
+            ListItem.MouseEnter:Connect(function()
+                ListItem.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+                ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
+            end)
+            
+            ListItem.MouseLeave:Connect(function()
+                ListItem.BackgroundColor3 = Color3.fromRGB(60, 70, 90)
+                ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
+            end)
 
             ListItem.MouseButton1Click:Connect(function()
                 DropdownButton.Text = translatedOption -- ИЗМЕНЕНО
@@ -990,8 +1261,10 @@ local function InitializeMainGUI()
                     DropdownList.Visible = false
                 end)
 
-                if callback then
-                    callback(optionKey) -- Возвращаем КЛЮЧ
+                if callback and type(callback) == "function" then
+                    pcall(function()
+                        callback(optionKey)
+                    end)
                 end
             end)
         end
@@ -1031,8 +1304,10 @@ local function InitializeMainGUI()
         ButtonCorner.Parent = Button
 
         Button.MouseButton1Click:Connect(function()
-            if callback then
-                callback()
+            if callback and type(callback) == "function" then
+                pcall(function()
+                    callback()
+                end)
             end
         end)
 
@@ -1135,6 +1410,54 @@ local function InitializeMainGUI()
         return SliderFrame
     end
 
+    local function CreateTextBox(parent, textKey, placeholderText, callback)
+        local TextBoxFrame = Instance.new("Frame")
+        TextBoxFrame.Name = textKey .. "TextBox"
+        TextBoxFrame.Size = UDim2.new(0.9, 0, 0, 35)
+        TextBoxFrame.BackgroundTransparency = 1
+        TextBoxFrame.Parent = parent
+
+        local TextBoxLabel = Instance.new("TextLabel")
+        TextBoxLabel.Name = "Label"
+        TextBoxLabel.Size = UDim2.new(0.35, 0, 1, 0)
+        TextBoxLabel.Position = UDim2.new(0, 0, 0, 0)
+        TextBoxLabel.BackgroundTransparency = 1
+        TextBoxLabel.Text = " " .. GetText(textKey)
+        TextBoxLabel.TextColor3 = Mega.Settings.Menu.TextColor
+        TextBoxLabel.TextSize = 13
+        TextBoxLabel.Font = Enum.Font.Gotham
+        TextBoxLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TextBoxLabel.Parent = TextBoxFrame
+
+        local TextBox = Instance.new("TextBox")
+        TextBox.Name = "Input"
+        TextBox.Size = UDim2.new(0.6, 0, 0, 25)
+        TextBox.Position = UDim2.new(0.4, 0, 0.5, -12.5)
+        TextBox.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
+        TextBox.BorderSizePixel = 0
+        TextBox.PlaceholderText = placeholderText
+        TextBox.Text = ""
+        TextBox.TextColor3 = Mega.Settings.Menu.TextColor
+        TextBox.TextSize = 11
+        TextBox.Font = Enum.Font.Gotham
+        TextBox.ClearTextOnFocus = false
+        
+        local TextBoxCorner = Instance.new("UICorner")
+        TextBoxCorner.CornerRadius = UDim.new(0, 6)
+        TextBoxCorner.Parent = TextBox
+        TextBox.Parent = TextBoxFrame
+
+        if callback then
+            TextBox.FocusLost:Connect(function(enterPressed)
+                if enterPressed then
+                    callback(TextBox.Text)
+                end
+            end)
+        end
+
+        return TextBoxFrame, TextBox
+    end
+
     local function CreateKeybindButton(parent, textKey, currentKey, callback)
         local translatedText = GetText(textKey) -- ИЗМЕНЕНО
         
@@ -1207,6 +1530,14 @@ local function InitializeMainGUI()
     end)
     CreateToggle(HomeFrame, "toggle_perf_mode", Mega.Settings.System.PerformanceMode, function(state)
         Mega.Settings.System.PerformanceMode = state
+    end)
+    CreateToggle(HomeFrame, "toggle_status_indicator", Mega.Settings.System.ShowStatusIndicator, function(state)
+        Mega.Settings.System.ShowStatusIndicator = state
+        if state then
+            UpdateStatusIndicator()
+        else
+            StatusIndicator.Visible = false
+        end
     end)
     CreateSection(HomeFrame, "section_quick_access")
     CreateButton(HomeFrame, "button_esp_toggle", function()
@@ -1575,40 +1906,50 @@ local function InitializeMainGUI()
         end)
     }
     
+    local isMouseDown = false
+    local lastClickTime = 0
+    
     CreateToggleWithSettings(PlayerFrame, "toggle_fastbreak", Mega.States.Player.FastBreak, function(state)
         Mega.States.Player.FastBreak = state
         if state then
-            Mega.Objects.Connections.FastBreak = RunService.Heartbeat:Connect(function()
-                if LocalPlayer.Character then
+            Mega.Objects.Connections.FastBreakMouse1 = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isMouseDown = true
+                end
+            end)
+            
+            Mega.Objects.Connections.FastBreakMouse2 = UserInputService.InputEnded:Connect(function(input, gameProcessed)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isMouseDown = false
+                end
+            end)
+            
+            Mega.Objects.Connections.FastBreak = RunService.RenderStepped:Connect(function()
+                if LocalPlayer.Character and isMouseDown then
                     local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
                     if tool then
                         local toolName = tool.Name:lower()
                         if toolName:find("axe") or toolName:find("pickaxe") or toolName:find("shears") or 
-                           toolName:find("топор") or toolName:find("кирка") or toolName:find("ножницы") then
+                           toolName:find("топор") or toolName:find("кирка") or toolName:find("ножницы") or
+                           toolName:find("wood") or toolName:find("stone") or toolName:find("iron") or
+                           toolName:find("sword") or toolName:find("меч") then
                             
-                            for _, obj in pairs(tool:GetDescendants()) do
-                                if obj:IsA("NumberValue") or obj:IsA("IntValue") then
-                                    if obj.Name:lower():find("cooldown") or obj.Name:lower():find("delay") then
-                                        obj.Value = obj.Value / Mega.States.Player.BreakSpeed
-                                    end
-                                end
+                            local clickDelay = 0.05 / Mega.States.Player.BreakSpeed
+                            local currentTime = tick()
+                            
+                            if currentTime - lastClickTime >= clickDelay then
+                                lastClickTime = currentTime
                                 
-                                if obj:IsA("Animation") then
-                                    local animator = LocalPlayer.Character:FindFirstChild("Humanoid"):FindFirstChildOfClass("Animator")
+                                tool:Activate()
+                                
+                                local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+                                if humanoid then
+                                    local animator = humanoid:FindFirstChildOfClass("Animator")
                                     if animator then
                                         for _, track in pairs(animator:GetPlayingAnimationTracks()) do
-                                            track:AdjustSpeed(Mega.States.Player.BreakSpeed)
-                                        end
-                                    end
-                                end
-                            end
-                            
-                            if tool:FindFirstChild("Handle") then
-                                local config = tool:FindFirstChild("ToolConfig") or tool:FindFirstChild("Configuration")
-                                if config then
-                                    for _, child in pairs(config:GetChildren()) do
-                                        if child:IsA("NumberValue") and (child.Name == "Cooldown" or child.Name == "SwingCooldown") then
-                                            child.Value = 0.1 / Mega.States.Player.BreakSpeed
+                                            pcall(function()
+                                                track:AdjustSpeed(Mega.States.Player.BreakSpeed * 2)
+                                            end)
                                         end
                                     end
                                 end
@@ -1621,6 +1962,13 @@ local function InitializeMainGUI()
             if Mega.Objects.Connections.FastBreak then
                 Mega.Objects.Connections.FastBreak:Disconnect()
             end
+            if Mega.Objects.Connections.FastBreakMouse1 then
+                Mega.Objects.Connections.FastBreakMouse1:Disconnect()
+            end
+            if Mega.Objects.Connections.FastBreakMouse2 then
+                Mega.Objects.Connections.FastBreakMouse2:Disconnect()
+            end
+            isMouseDown = false
         end
     end, fastBreakSettings)
     
@@ -1840,33 +2188,293 @@ local function InitializeMainGUI()
         
         showNotification(GetText("notify_theme_changed"))
     end)
+    
+    local languageOptions = {"language_english", "language_russian", "language_spanish", "language_portuguese", "language_korean", "language_japanese"}
+    local currentLangKey = "language_english"
+    if Mega.Localization.CurrentLanguage == "ru" then currentLangKey = "language_russian"
+    elseif Mega.Localization.CurrentLanguage == "es" then currentLangKey = "language_spanish"
+    elseif Mega.Localization.CurrentLanguage == "pt" then currentLangKey = "language_portuguese"
+    elseif Mega.Localization.CurrentLanguage == "ko" then currentLangKey = "language_korean"
+    elseif Mega.Localization.CurrentLanguage == "ja" then currentLangKey = "language_japanese"
+    end
+    
+    CreateDropdown(SettingsFrame, "dropdown_language", languageOptions, currentLangKey, function(selectedKey)
+        local newLang = "en"
+        if selectedKey == "language_russian" then newLang = "ru"
+        elseif selectedKey == "language_spanish" then newLang = "es"
+        elseif selectedKey == "language_portuguese" then newLang = "pt"
+        elseif selectedKey == "language_korean" then newLang = "ko"
+        elseif selectedKey == "language_japanese" then newLang = "ja"
+        end
+        
+        if newLang == Mega.Localization.CurrentLanguage then
+            return
+        end
+        
+        Mega.Localization.CurrentLanguage = newLang
+        if writefile then
+            writefile("TumbaLanguage.txt", newLang)
+        end
+        
+        local langName = GetText(selectedKey)
+        showNotification(GetText("notify_language_changed", langName))
+        
+        task.wait(1)
+        
+        for _, conn in pairs(Mega.Objects.Connections) do
+            pcall(function() conn:Disconnect() end)
+        end
+        
+        for _, esp in pairs(Mega.Objects.ESP) do
+            for _, drawing in pairs(esp) do
+                pcall(function() drawing:Remove() end)
+            end
+        end
+        
+        if Mega.Objects.GUI then
+            Mega.Objects.GUI:Destroy()
+        end
+        
+        Mega.Objects = {
+            ESP = {},
+            KitESPObjects = {},
+            Connections = {},
+            GUI = nil,
+            PlayerListItems = {}
+        }
+        
+        InitializeMainGUI()
+        
+        task.wait(0.5)
+        if Mega.Objects.GUI then
+            Mega.Objects.GUI.Enabled = true
+        end
+    end, true)
     CreateKeybindButton(SettingsFrame, "keybind_menu", Mega.States.Keybinds.Menu, function(key)
         Mega.States.Keybinds.Menu = key
     end)
+    local function GetConfigList()
+        local configs = {}
+        local foundConfigs = {}
+        
+        foundConfigs["default"] = true
+        table.insert(configs, "default")
+        
+        if listfiles then
+            local success, files = pcall(listfiles)
+            if success and files then
+                for _, file in pairs(files) do
+                    if type(file) == "string" then
+                        local fileName = file:gsub("\\", "/")
+                        local justFileName = fileName:match("([^/]+)$") or fileName
+                        
+                        if justFileName:find("TumbaConfig_") and justFileName:find(".json") then
+                            local name = justFileName:match("TumbaConfig_(.+)%.json")
+                            if name and name ~= "" and not foundConfigs[name] then
+                                foundConfigs[name] = true
+                                table.insert(configs, name)
+                                print("📂 Found config: " .. name)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        for configName, _ in pairs(Mega.Database.Configs) do
+            if not foundConfigs[configName] then
+                foundConfigs[configName] = true
+                table.insert(configs, configName)
+                print("💾 Found config in memory: " .. configName)
+            end
+        end
+        
+        print("📋 Total configs found: " .. #configs)
+        return configs
+    end
+    
     CreateSection(SettingsFrame, "section_settings_config")
+    
+    local configNameFrame, configNameBox = CreateTextBox(SettingsFrame, "textbox_config_name", GetText("textbox_config_name"))
+    local selectedConfigName = "default"
+    
     CreateButton(SettingsFrame, "button_config_save", function()
+        local configName = configNameBox.Text
+        if configName == "" or configName == GetText("textbox_config_name") then
+            showNotification(GetText("notify_enter_name"))
+            return
+        end
+        
         local configData = {
             Settings = Mega.Settings,
             States = Mega.States,
-            Stats = Mega.Database.Stats
+            Stats = Mega.Database.Stats,
+            Language = Mega.Localization.CurrentLanguage
         }
 
-        Mega.Database.Configs["default"] = configData
+        Mega.Database.Configs[configName] = configData
         Mega.Database.Stats.ConfigSaves = Mega.Database.Stats.ConfigSaves + 1
         
+        if writefile and HttpService then
+            local jsonConfig = HttpService:JSONEncode(configData)
+            writefile("TumbaConfig_" .. configName .. ".json", jsonConfig)
+        end
+        
         showNotification(GetText("notify_config_saved", Mega.Database.Stats.ConfigSaves))
+        configNameBox.Text = ""
+        
+        showNotification("✅ Config saved! Click 🔄 Refresh List to see it")
     end)
+    
+    local configList = GetConfigList()
+    local configDropdown = CreateDropdown(SettingsFrame, "dropdown_config_list", configList, configList[1] or "default", function(selected)
+        if selected and selected ~= "" then
+            selectedConfigName = selected
+            print("📂 Selected config: " .. selected)
+        end
+    end, false)
+    
     CreateButton(SettingsFrame, "button_config_load", function()
-        if Mega.Database.Configs["default"] then
-            local config = Mega.Database.Configs["default"]
-
-            Mega.Settings = config.Settings or Mega.Settings
-            Mega.States = config.States or Mega.States
-            Mega.Database.Stats = config.Stats or Mega.Database.Stats
+        local configData = nil
+        local fileName = "TumbaConfig_" .. selectedConfigName .. ".json"
+        
+        if readfile and isfile and isfile(fileName) and HttpService then
+            local success, json = pcall(function()
+                return readfile(fileName)
+            end)
+            if success then
+                local decoded = pcall(function()
+                    return HttpService:JSONDecode(json)
+                end)
+                if decoded then
+                    configData = HttpService:JSONDecode(json)
+                end
+            end
+        end
+        
+        if not configData then
+            configData = Mega.Database.Configs[selectedConfigName]
+        end
+        
+        if configData then
+            configData = RestoreColorsGlobal(configData)
+            
+            if configData.Settings and configData.Settings.Menu then
+                for key, value in pairs(configData.Settings.Menu) do
+                    if typeof(value) == "Color3" or (type(value) == "table" and value.R) then
+                        Mega.Settings.Menu[key] = typeof(value) == "Color3" and value or Color3.new(value.R, value.G, value.B)
+                    else
+                        Mega.Settings.Menu[key] = value
+                    end
+                end
+                if configData.Settings.System then
+                    Mega.Settings.System = configData.Settings.System
+                end
+            end
+            
+            if configData.States then
+                for category, settings in pairs(configData.States) do
+                    if Mega.States[category] then
+                        for key, value in pairs(settings) do
+                            Mega.States[category][key] = value
+                        end
+                    end
+                end
+            end
+            
+            if configData.Stats then
+                Mega.Database.Stats = configData.Stats
+            end
+            
+            if configData.Language and configData.Language ~= Mega.Localization.CurrentLanguage then
+                Mega.Localization.CurrentLanguage = configData.Language
+                if writefile then
+                    writefile("TumbaLanguage.txt", configData.Language)
+                end
+            end
 
             showNotification(GetText("notify_config_loaded"))
+            
+            task.wait(1)
+            
+            for _, conn in pairs(Mega.Objects.Connections) do
+                pcall(function() conn:Disconnect() end)
+            end
+            
+            for _, esp in pairs(Mega.Objects.ESP) do
+                for _, drawing in pairs(esp) do
+                    pcall(function() drawing:Remove() end)
+                end
+            end
+            
+            if Mega.Objects.GUI then
+                Mega.Objects.GUI:Destroy()
+            end
+            
+            Mega.Objects = {
+                ESP = {},
+                KitESPObjects = {},
+                Connections = {},
+                GUI = nil,
+                PlayerListItems = {}
+            }
+            
+            InitializeMainGUI()
+            
+            task.wait(0.5)
+            if Mega.Objects.GUI then
+                Mega.Objects.GUI.Enabled = true
+            end
         else
             showNotification(GetText("notify_config_not_found"))
+        end
+    end)
+    
+    CreateButton(SettingsFrame, "button_config_delete", function()
+        if selectedConfigName == "default" then
+            showNotification("⚠️ Cannot delete default config")
+            return
+        end
+        
+        local fileName = "TumbaConfig_" .. selectedConfigName .. ".json"
+        if delfile and isfile and isfile(fileName) then
+            delfile(fileName)
+            showNotification(GetText("notify_config_deleted"))
+            selectedConfigName = "default"
+        end
+    end)
+    
+    CreateButton(SettingsFrame, "button_config_refresh", function()
+        showNotification("🔄 Reloading GUI to refresh config list...")
+        task.wait(0.5)
+        
+        for _, conn in pairs(Mega.Objects.Connections) do
+            pcall(function() conn:Disconnect() end)
+        end
+        
+        for _, esp in pairs(Mega.Objects.ESP) do
+            for _, drawing in pairs(esp) do
+                pcall(function() drawing:Remove() end)
+            end
+        end
+        
+        if Mega.Objects.GUI then
+            Mega.Objects.GUI:Destroy()
+        end
+        
+        Mega.Objects = {
+            ESP = {},
+            KitESPObjects = {},
+            Connections = {},
+            GUI = nil,
+            PlayerListItems = {}
+        }
+        
+        InitializeMainGUI()
+        
+        task.wait(0.5)
+        if Mega.Objects.GUI then
+            Mega.Objects.GUI.Enabled = true
         end
     end)
     CreateButton(SettingsFrame, "button_config_reset", function()
@@ -2416,7 +3024,8 @@ local function InitializeMainGUI()
         end
 
         -- Обновление списка игроков
-        if TumbaGUI.Enabled and TabFrames[GetText("tab_users")].Visible then
+        local usersTab = TabFrames[GetText("tab_users")]
+        if TumbaGUI.Enabled and usersTab and usersTab.Visible then
             UpdatePlayerList()
         end
 
@@ -2436,7 +3045,16 @@ local function InitializeMainGUI()
         if AimFOVCircle then
             AimFOVCircle.Visible = Mega.States.AimAssist.Enabled and Mega.States.AimAssist.ShowFOV
             AimFOVCircle.Radius = Mega.States.AimAssist.FOV
-            AimFOVCircle.Color = Mega.States.AimAssist.FOVColor
+            
+            local fovColor = Mega.States.AimAssist.FOVColor
+            if typeof(fovColor) == "Color3" then
+                AimFOVCircle.Color = fovColor
+            elseif type(fovColor) == "table" and fovColor.R then
+                AimFOVCircle.Color = Color3.new(fovColor.R, fovColor.G, fovColor.B)
+            else
+                AimFOVCircle.Color = Color3.fromRGB(0, 180, 255)
+            end
+            
             AimFOVCircle.Position = UserInputService:GetMouseLocation()
         end
 
@@ -2447,6 +3065,11 @@ local function InitializeMainGUI()
                 Mega.Database.Stats.PlayTime,
                 Mega.Database.Stats.ConfigSaves
             )
+        end
+        
+        -- Обновление индикатора активных функций
+        if tick() % 0.5 < 0.016 then
+            UpdateStatusIndicator()
         end
     end)
     -- Анти-AFK система
@@ -2512,13 +3135,109 @@ local function InitializeMainGUI()
 end -- === КОНЕЦ ФУНКЦИИ InitializeMainGUI ===
 
 
--- === НАЧАЛО: ЛОГИКА ВЫБОРА ЯЗЫКА (ИСПРАВЛЕНА ВЕРСТКА) ===
+-- === НАЧАЛО: ЛОГИКА ВЫБОРА ЯЗЫКА (С СОХРАНЕНИЕМ) ===
 
--- 1. Создаем отдельный, простой GUI для выбора
-local LanguagePrompt = Instance.new("ScreenGui")
-LanguagePrompt.Name = "LanguagePrompt"
-LanguagePrompt.Parent = CoreGui
-LanguagePrompt.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- Функция сохранения языка
+local function SaveLanguage(lang)
+    if writefile then
+        writefile("TumbaLanguage.txt", lang)
+    end
+end
+
+-- Функция загрузки языка
+local function LoadLanguage()
+    if readfile and isfile and isfile("TumbaLanguage.txt") then
+        return readfile("TumbaLanguage.txt")
+    end
+    return nil
+end
+
+-- Функция восстановления Color3 из таблиц JSON
+local function RestoreColorsGlobal(data)
+    if not data then return data end
+    
+    if type(data) == "table" then
+        if data.R and data.G and data.B and type(data.R) == "number" then
+            return Color3.new(data.R, data.G, data.B)
+        end
+        
+        for key, value in pairs(data) do
+            data[key] = RestoreColorsGlobal(value)
+        end
+    end
+    
+    return data
+end
+
+-- Функция автозагрузки конфига
+local function AutoLoadConfig()
+    local fileName = "TumbaConfig_default.json"
+    
+    if readfile and isfile and isfile(fileName) and HttpService then
+        local success, json = pcall(function()
+            return readfile(fileName)
+        end)
+        if success and json then
+            local decoded, configData = pcall(function()
+                return HttpService:JSONDecode(json)
+            end)
+            if decoded and configData then
+                configData = RestoreColorsGlobal(configData)
+                
+                if configData.Settings and configData.Settings.Menu then
+                    for key, value in pairs(configData.Settings.Menu) do
+                        if typeof(value) == "Color3" or (type(value) == "table" and value.R) then
+                            Mega.Settings.Menu[key] = typeof(value) == "Color3" and value or Color3.new(value.R, value.G, value.B)
+                        else
+                            Mega.Settings.Menu[key] = value
+                        end
+                    end
+                    if configData.Settings.System then
+                        Mega.Settings.System = configData.Settings.System
+                    end
+                end
+                
+                if configData.States then
+                    for category, settings in pairs(configData.States) do
+                        if Mega.States[category] then
+                            for key, value in pairs(settings) do
+                                Mega.States[category][key] = value
+                            end
+                        end
+                    end
+                end
+                
+                if configData.Stats then
+                    Mega.Database.Stats = configData.Stats
+                end
+                
+                print("💾 Auto-loaded config: default")
+                return true
+            end
+        end
+    end
+    return false
+end
+
+-- Проверяем, есть ли сохраненный язык
+local savedLanguage = LoadLanguage()
+
+if savedLanguage then
+    -- Если язык сохранен - сразу запускаем GUI
+    Mega.Localization.CurrentLanguage = savedLanguage
+    print("Language loaded: " .. savedLanguage)
+    
+    -- Автозагрузка конфига (если есть)
+    AutoLoadConfig()
+    
+    InitializeMainGUI()
+else
+    -- Если языка нет - показываем окно выбора
+    -- 1. Создаем отдельный, простой GUI для выбора
+    local LanguagePrompt = Instance.new("ScreenGui")
+    LanguagePrompt.Name = "LanguagePrompt"
+    LanguagePrompt.Parent = CoreGui
+    LanguagePrompt.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local Background = Instance.new("Frame")
 Background.Size = UDim2.new(0, 300, 0, 420) -- Увеличена высота
@@ -2595,42 +3314,46 @@ JapaneseButton.Name = "Japanese"
 JapaneseButton.Text = "日本語"
 JapaneseButton.Parent = ButtonContainer
 
--- 2. Логика нажатия
-local function OnLanguageSelected(lang)
-    Mega.Localization.CurrentLanguage = lang
-    print("Language set to: " .. lang)
+    -- 2. Логика нажатия
+    local function OnLanguageSelected(lang)
+        Mega.Localization.CurrentLanguage = lang
+        print("Language set to: " .. lang)
+        
+        -- Сохраняем язык
+        SaveLanguage(lang)
 
-    -- Уничтожаем окно выбора
-    LanguagePrompt:Destroy()
+        -- Уничтожаем окно выбора
+        LanguagePrompt:Destroy()
 
-    -- ЗАПУСКАЕМ СОЗДАНИЕ ОСНОВНОГО GUI
-    InitializeMainGUI()
+        -- ЗАПУСКАЕМ СОЗДАНИЕ ОСНОВНОГО GUI
+        InitializeMainGUI()
+    end
+
+    EnglishButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("en")
+    end)
+
+    RussianButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("ru")
+    end)
+
+    SpanishButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("es")
+    end)
+
+    PortugueseButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("pt")
+    end)
+
+    KoreanButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("ko")
+    end)
+
+    JapaneseButton.MouseButton1Click:Connect(function()
+        OnLanguageSelected("ja")
+    end)
 end
-
-EnglishButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("en")
-end)
-
-RussianButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("ru")
-end)
-
-SpanishButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("es")
-end)
-
-PortugueseButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("pt")
-end)
-
-KoreanButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("ko")
-end)
-
-JapaneseButton.MouseButton1Click:Connect(function()
-    OnLanguageSelected("ja")
-end)
 
 -- === КОНЕЦ: ЛОГИКА ВЫБОРА ЯЗЫКА ===
 
--- Скрипт теперь ждет выбора языка...
+-- Скрипт теперь автоматически загружает сохраненный язык или показывает окно выбора...
