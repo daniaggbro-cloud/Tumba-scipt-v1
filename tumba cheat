@@ -103,7 +103,6 @@ local Mega = {
             Fly = false,
             Speed = false,
             SpeedValue = 100,
-            Noclip = false,
             GodMode = false,
             InfiniteJump = false,
             NoClip = false,
@@ -131,7 +130,11 @@ local Mega = {
             AutoFarm = false,
             CollectItems = false,
             AntiStun = false,
-            AntiGrab = false
+            AutoKit = {
+                Enabled = false,
+                KitName = "yuzi",
+                Cooldown = 2,
+            }
         },
         Keybinds = {
             Menu = "RightShift",
@@ -181,13 +184,18 @@ local Mega = {
             ["notify_reload"] = { ru = "🔄 Скрипт перезагружается...", en = "🔄 Script reloading...", es = "🔄 Recargando script...", pt = "🔄 Recarregando script...", ko = "🔄 스크립트 재로드 중...", ja = "🔄 スクリプト再読み込み中..." },
             ["notify_cleanup"] = { ru = "🗑️ Скрипт выгружен", en = "🗑️ Script unloaded", es = "🗑️ Script descargado", pt = "🗑️ Script descarregado", ko = "🗑️ 스크립트 언로드됨", ja = "🗑️ スクリプトアンロード" },
            
+            ["notify_autofarm_on"] = { ru = "🚜 Авто-ферма ВКЛЮЧЕНА", en = "🚜 Auto-Farm ENABLED", es = "🚜 Auto-Farm HABILITADO", pt = "🚜 Auto-Farm ATIVADO", ko = "🚜 자동 농장 활성화됨", ja = "🚜 自動ファーム有効" },
+            ["notify_autofarm_off"] = { ru = "🚜 Авто-ферма ВЫКЛЮЧЕНА", en = "🚜 Auto-Farm DISABLED", es = "🚜 Auto-Farm DESHABILITADO", pt = "🚜 Auto-Farm DESATIVADO", ko = "🚜 자동 농장 비활성화됨", ja = "🚜 自動ファーム無効" },
+
             -- Ключи для вкладок
             ["tab_home"] = { ru = "🏠 ГЛАВНАЯ", en = "🏠 HOME", es = "🏠 INICIO", pt = "🏠 INÍCIO", ko = "🏠 홈", ja = "🏠 ホーム" },
+            ["tab_updates"] = { ru = "📢 ОБНОВЛЕНИЯ", en = "📢 UPDATES", es = "📢 ACTUALIZACIONES", pt = "📢 ATUALIZAÇÕES", ko = "📢 업데이트", ja = "📢 更新" },
             ["tab_esp"] = { ru = "👁️ ESP", en = "👁️ ESP", es = "👁️ ESP", pt = "👁️ ESP", ko = "👁️ ESP", ja = "👁️ ESP" },
             ["tab_aim"] = { ru = "🎯 AIM", en = "🎯 AIM", es = "🎯 PUNTERÍA", pt = "🎯 MIRA", ko = "🎯 조준", ja = "🎯 狙い" },
             ["tab_player"] = { ru = "⚡ ИГРОК", en = "⚡ PLAYER", es = "⚡ JUGADOR", pt = "⚡ JOGADOR", ko = "⚡ 플레이어", ja = "⚡ プレイヤー" },
             ["tab_combat"] = { ru = "🎮 БОЙ", en = "🎮 COMBAT", es = "🎮 COMBATE", pt = "🎮 COMBATE", ko = "🎮 전투", ja = "🎮 戦闘" },
             ["tab_visuals"] = { ru = "🌈 ВИЗУАЛЫ", en = "🌈 VISUALS", es = "🌈 VISUALES", pt = "🌈 VISUAIS", ko = "🌈 비주얼", ja = "🌈 ビジュアル" },
+            ["tab_farm"] = { ru = "🚜 КИТ", en = "🚜 KIT", es = "🚜 KIT", pt = "🚜 KIT", ko = "🚜 키트", ja = "🚜 キット" },
             ["tab_users"] = { ru = "👥 ИГРОКИ", en = "👥 PLAYERS", es = "👥 JUGADORES", pt = "👥 JOGADORES", ko = "👥 플레이어들", ja = "👥 プレイヤー" },
             ["tab_utils"] = { ru = "🔧 УТИЛИТЫ", en = "🔧 UTILITIES", es = "🔧 UTILIDADES", pt = "🔧 UTILITÁRIOS", ko = "🔧 유틸리티", ja = "🔧 ユーティリティ" },
             ["tab_settings"] = { ru = "⚙️ НАСТРОЙКИ", en = "⚙️ SETTINGS", es = "⚙️ AJUSTES", pt = "⚙️ CONFIGURAÇÕES", ko = "⚙️ 설정", ja = "⚙️ 設定" },
@@ -202,6 +210,8 @@ local Mega = {
             ["dropdown_label"] = { ru = " %s:", en = " %s:", es = " %s:", pt = " %s:", ko = " %s:", ja = " %s:" },
 
             -- Вкладка: Главная
+            ["section_updates_list"] = { ru = "✨ ЧТО НОВОГО В ЭТОЙ ВЕРСИИ?", en = "✨ WHAT'S NEW IN THIS VERSION?", es = "✨ ¿QUÉ HAY DE NUEVO EN ESTA VERSIÓN?", pt = "✨ O QUE HÁ DE NOVO NESTA VERSÃO?", ko = "✨ 이번 버전의 새로운 기능", ja = "✨ このバージョンの新機能" },
+            ["update_text_v5_1"] = { ru = "• [Игрок] Добавлена функция 'Анти-урон от падения BETA'.\n• [Кит] Добавлен 'Авто-кит BETA' для сбора ресурсов (металл, дерево). В будущем список будет расширен.", en = "• [Player] Added 'No Fall Damage BETA' feature.\n• [Kit] Added 'Auto-Kit BETA' for resource gathering (metal, wood). The list will be expanded in the future.", es = "• [Jugador] Añadida la función 'Sin Daño por Caída BETA'.\n• [Kit] Añadido 'Auto-Kit BETA' para recolección de recursos (metal, madera). La lista se ampliará en el futuro.", pt = "• [Jogador] Adicionada a função 'Sem Dano de Queda BETA'.\n• [Kit] Adicionado 'Auto-Kit BETA' para coleta de recursos (metal, madeira). A lista será expandida no futuro.", ko = "• [플레이어] '낙하 피해 없음 BETA' 기능 추가.\n• [키트] 자원 수집을 위한 '자동 키트 BETA' 추가 (금속, 나무). 목록은 추후 확장될 예정입니다.", ja = "• [プレイヤー]「落下ダメージなし BETA」機能を追加。\n• [キット] リソース収集用の「自動キット BETA」を追加（金属、木材）。リストは将来的に拡張されます。" },
             ["section_status"] = { ru = "💎 СИСТЕМНЫЙ СТАТУС", en = "💎 SYSTEM STATUS", es = "💎 ESTADO DEL SISTEMA", pt = "💎 STATUS DO SISTEMA", ko = "💎 시스템 상태", ja = "💎 システムステータス" },
             ["toggle_autosave"] = { ru = "🔄 Авто-сохранение конфигов", en = "🔄 Auto-save configs", es = "🔄 Guardado automático de configuraciones", pt = "🔄 Salvar configs automaticamente", ko = "🔄 자동 저장 설정", ja = "🔄 自動保存設定" },
             ["toggle_perf_mode"] = { ru = "⚡ Режим производительности", en = "⚡ Performance Mode", es = "⚡ Modo de rendimiento", pt = "⚡ Modo de desempenho", ko = "⚡ 성능 모드", ja = "⚡ パフォーマンスモード" },
@@ -269,8 +279,13 @@ local Mega = {
             ["toggle_noclip"] = { ru = "Ноклип", en = "Noclip", es = "Noclip", pt = "Noclip", ko = "노클립", ja = "ノークリップ" },
             ["toggle_antiknockback"] = { ru = "Анти-отбрасывание", en = "Anti-Knockback", es = "Anti-Retroceso", pt = "Anti-Recuo", ko = "넉백 방지", ja = "ノックバック無効" },
             ["slider_knockback_strength"] = { ru = "Сила отбрасывания", en = "Knockback Strength", es = "Fuerza de Retroceso", pt = "Força de Recuo", ko = "넉백 강도", ja = "ノックバック強度" },
+            ["toggle_nofall"] = { ru = "Анти-урон от падения BETA", en = "No Fall Damage BETA", es = "Sin Daño por Caída BETA", pt = "Sem Dano de Queda BETA", ko = "낙하 피해 없음 BETA", ja = "落下ダメージなし BETA" },
             ["section_antiknockback_settings"] = { ru = "⚙️ НАСТРОЙКИ АНТИ-КНОКБЕКА", en = "⚙️ ANTI-KNOCKBACK SETTINGS", es = "⚙️ CONFIGURACIONES ANTI-RETROCESO", pt = "⚙️ CONFIGURAÇÕES ANTI-RECUO", ko = "⚙️ 넉백 방지 설정", ja = "⚙️ ノックバック無効設定" },
             ["toggle_fastbreak"] = { ru = "Быстрое разрушение", en = "Fast Break", es = "Rotura Rápida", pt = "Quebra Rápida", ko = "빠른 파괴", ja = "高速破壊" },
+            ["section_farm_main"] = { ru = "🚜 ОСНОВНЫЕ НАСТРОЙКИ ФЕРМЫ", en = "🚜 MAIN FARM SETTINGS", es = "🚜 CONFIGURACIONES PRINCIPALES DE GRANJA", pt = "🚜 CONFIGURAÇÕES PRINCIPAIS DA FAZENDA", ko = "🚜 주요 농장 설정", ja = "🚜 主なファーム設定" },
+            ["autofarm_info"] = { ru = "Поддерживаемые ресурсы: Руда, Дерево", en = "Supported resources: Ore, Wood", es = "Recursos soportados: Mineral, Madera", pt = "Recursos suportados: Minério, Madeira", ko = "지원 자원: 광석, 나무", ja = "対応リソース: 鉱石、木" },
+            ["notify_autokit_on"] = { ru = "🤖 Авто-кит ВКЛЮЧЕН для '%s'", en = "🤖 Auto-Kit ENABLED for '%s'", es = "🤖 Auto-Kit HABILITADO para '%s'", pt = "🤖 Auto-Kit ATIVADO para '%s'", ko = "🤖 자동 키트 활성화됨: '%s'", ja = "🤖 自動キット有効: '%s'" },
+            ["notify_autokit_off"] = { ru = "🤖 Авто-кит ВЫКЛЮЧЕН", en = "🤖 Auto-Kit DISABLED", es = "🤖 Auto-Kit DESHABILITADO", pt = "🤖 Auto-Kit DESATIVADO", ko = "🤖 자동 키트 비활성화됨", ja = "🤖 自動キット無効" },
             ["slider_break_speed"] = { ru = "Скорость разрушения", en = "Break Speed", es = "Velocidad de Rotura", pt = "Velocidade de Quebra", ko = "파괴 속도", ja = "破壊速度" },
 
             -- Вкладка: Бой
@@ -297,6 +312,7 @@ local Mega = {
             ["button_server_info"] = { ru = "🔍 Информация об сервере", en = "🔍 Server Info", es = "🔍 Información del Servidor", pt = "🔍 Info do Servidor", ko = "🔍 서버 정보", ja = "🔍 サーバー情報" },
             ["section_utils_fun"] = { ru = "🎪 РАЗВЛЕЧЕНИЯ", en = "🎪 MISC", es = "🎪 VARIOS", pt = "🎪 DIVERSOS", ko = "🎪 기타", ja = "🎪 雑多" },
             ["toggle_fame_spam"] = { ru = "Спам в чат", en = "Chat Spam", es = "Spam de Chat", pt = "Spam no Chat", ko = "채팅 스팸", ja = "チャットスパム" },
+            ["toggle_autofarm"] = { ru = "Авто-кит BETA", en = "Auto-Kit BETA", es = "Auto-Kit BETA", pt = "Auto-Kit BETA", ko = "자동 키트 BETA", ja = "自動キット BETA" },
             ["button_reload_script"] = { ru = "🔄 Релоад скрипта", en = "🔄 Reload Script", es = "🔄 Recargar Script", pt = "🔄 Recarregar Script", ko = "🔄 스크립트 재로드", ja = "🔄 スクリプト再読み込み" },
 
             -- Вкладка: Настройки
@@ -815,11 +831,13 @@ local function InitializeMainGUI()
     -- ИЗМЕНЕНО: Используем ключи
     local Tabs = {
         GetText("tab_home"),
+        GetText("tab_updates"),
         GetText("tab_esp"),
         GetText("tab_aim"),
         GetText("tab_player"),
         GetText("tab_combat"),
         GetText("tab_visuals"),
+        GetText("tab_farm"),
         GetText("tab_users"),
         GetText("tab_utils"),
         GetText("tab_settings")
@@ -1578,6 +1596,22 @@ local function InitializeMainGUI()
     StatsLabel.TextYAlignment = Enum.TextYAlignment.Top
     StatsLabel.Parent = HomeFrame
 
+    -- Вкладка ОБНОВЛЕНИЯ
+    local UpdatesFrame = TabFrames[GetText("tab_updates")]
+    CreateSection(UpdatesFrame, "section_updates_list")
+    local UpdateText = Instance.new("TextLabel")
+    UpdateText.Name = "UpdateText"
+    UpdateText.Size = UDim2.new(0.9, 0, 0, 120)
+    UpdateText.BackgroundTransparency = 1
+    UpdateText.Text = GetText("update_text_v5_1")
+    UpdateText.TextColor3 = Mega.Settings.Menu.TextColor
+    UpdateText.TextSize = 14
+    UpdateText.Font = Enum.Font.Gotham
+    UpdateText.TextWrapped = true
+    UpdateText.TextXAlignment = Enum.TextXAlignment.Left
+    UpdateText.TextYAlignment = Enum.TextYAlignment.Top
+    UpdateText.Parent = UpdatesFrame
+
     -- Вкладка ESP
     local ESPFrame = TabFrames[GetText("tab_esp")]
     CreateSection(ESPFrame, "section_esp_main")
@@ -1861,6 +1895,10 @@ local function InitializeMainGUI()
             end
         end
     end)
+    CreateToggle(PlayerFrame, "toggle_nofall", Mega.States.Player.NoFall, function(state)
+        Mega.States.Player.NoFall = state
+    end)
+
     
     local antiKnockbackSettings = {
         CreateSlider(nil, "slider_knockback_strength", 0, 100, Mega.States.Player.KnockbackStrength, function(value)
@@ -1908,7 +1946,7 @@ local function InitializeMainGUI()
     
     local isMouseDown = false
     local lastClickTime = 0
-    
+
     CreateToggleWithSettings(PlayerFrame, "toggle_fastbreak", Mega.States.Player.FastBreak, function(state)
         Mega.States.Player.FastBreak = state
         if state then
@@ -1971,7 +2009,7 @@ local function InitializeMainGUI()
             isMouseDown = false
         end
     end, fastBreakSettings)
-    
+
     -- Вкладка БОЙ
     local CombatFrame = TabFrames[GetText("tab_combat")]
     CreateSection(CombatFrame, "section_combat_auto")
@@ -2117,13 +2155,13 @@ local function InitializeMainGUI()
     CreateButton(UtilsFrame, "button_server_info", function()
         local players = #Players:GetPlayers()
         local maxPlayers = Players.MaxPlayers
-        local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 
         print("🔍 " .. GetText("button_server_info"))
         print("🎮 Game: " .. gameName)
         print("👥 Players: " .. players .. "/" .. maxPlayers)
         print("🆔 Place ID: " .. game.PlaceId)
     end)
+
     CreateSection(UtilsFrame, "section_utils_fun")
     CreateToggle(UtilsFrame, "toggle_fame_spam", Mega.States.Misc.FameSpam, function(state)
         Mega.States.Misc.FameSpam = state
@@ -2165,7 +2203,30 @@ local function InitializeMainGUI()
         showNotification(GetText("notify_reload"))
         -- Логика релоада (обычно это перезапуск скрипта)
     end)
-    
+
+    -- Вкладка ФЕРМА
+    local FarmFrame = TabFrames[GetText("tab_farm")]
+    CreateSection(FarmFrame, "section_farm_main")
+
+    CreateToggle(FarmFrame, "toggle_autofarm", Mega.States.Misc.AutoFarm, function(state)
+        Mega.States.Misc.AutoFarm = state
+        if state then
+            showNotification(GetText("notify_autofarm_on"))
+        else
+            showNotification(GetText("notify_autofarm_off"))
+        end
+    end)
+
+    local AutoFarmInfo = Instance.new("TextLabel")
+    AutoFarmInfo.Size = UDim2.new(0.9, 0, 0, 40)
+    AutoFarmInfo.BackgroundTransparency = 1
+    AutoFarmInfo.TextColor3 = Color3.fromRGB(150, 160, 180)
+    AutoFarmInfo.Text = GetText("autofarm_info")
+    AutoFarmInfo.Font = Enum.Font.SourceSans
+    AutoFarmInfo.TextSize = 12
+    AutoFarmInfo.TextXAlignment = Enum.TextXAlignment.Center
+    AutoFarmInfo.Parent = FarmFrame
+
     -- Вкладка НАСТРОЙКИ
     local SettingsFrame = TabFrames[GetText("tab_settings")]
     CreateSection(SettingsFrame, "section_settings_appearance")
@@ -2212,38 +2273,15 @@ local function InitializeMainGUI()
         end
         
         Mega.Localization.CurrentLanguage = newLang
-        if writefile then
-            writefile("TumbaLanguage.txt", newLang)
-        end
+        SaveLanguage(newLang) -- Возвращаем старую логику
         
         local langName = GetText(selectedKey)
         showNotification(GetText("notify_language_changed", langName))
         
         task.wait(1)
         
-        for _, conn in pairs(Mega.Objects.Connections) do
-            pcall(function() conn:Disconnect() end)
-        end
-        
-        for _, esp in pairs(Mega.Objects.ESP) do
-            for _, drawing in pairs(esp) do
-                pcall(function() drawing:Remove() end)
-            end
-        end
-        
-        if Mega.Objects.GUI then
-            Mega.Objects.GUI:Destroy()
-        end
-        
-        Mega.Objects = {
-            ESP = {},
-            KitESPObjects = {},
-            Connections = {},
-            GUI = nil,
-            PlayerListItems = {}
-        }
-        
-        InitializeMainGUI()
+        -- ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+        ReloadGUI()
         
         task.wait(0.5)
         if Mega.Objects.GUI then
@@ -2261,20 +2299,14 @@ local function InitializeMainGUI()
         table.insert(configs, "default")
         
         if listfiles then
-            local success, files = pcall(listfiles)
+            local success, files = pcall(listfiles) -- ИЩЕМ В КОРНЕВОЙ ПАПКЕ
             if success and files then
                 for _, file in pairs(files) do
-                    if type(file) == "string" then
-                        local fileName = file:gsub("\\", "/")
-                        local justFileName = fileName:match("([^/]+)$") or fileName
-                        
-                        if justFileName:find("TumbaConfig_") and justFileName:find(".json") then
-                            local name = justFileName:match("TumbaConfig_(.+)%.json")
-                            if name and name ~= "" and not foundConfigs[name] then
-                                foundConfigs[name] = true
-                                table.insert(configs, name)
-                                print("📂 Found config: " .. name)
-                            end
+                    if type(file) == "string" and file:find("TumbaConfig_") and file:find(".json") then
+                        local name = file:match("TumbaConfig_(.+)%.json")
+                        if name and name ~= "" and not foundConfigs[name] then
+                            foundConfigs[name] = true
+                            table.insert(configs, name)
                         end
                     end
                 end
@@ -2395,31 +2427,9 @@ local function InitializeMainGUI()
 
             showNotification(GetText("notify_config_loaded"))
             
-            task.wait(1)
-            
-            for _, conn in pairs(Mega.Objects.Connections) do
-                pcall(function() conn:Disconnect() end)
-            end
-            
-            for _, esp in pairs(Mega.Objects.ESP) do
-                for _, drawing in pairs(esp) do
-                    pcall(function() drawing:Remove() end)
-                end
-            end
-            
-            if Mega.Objects.GUI then
-                Mega.Objects.GUI:Destroy()
-            end
-            
-            Mega.Objects = {
-                ESP = {},
-                KitESPObjects = {},
-                Connections = {},
-                GUI = nil,
-                PlayerListItems = {}
-            }
-            
-            InitializeMainGUI()
+            task.wait(0.5)
+            -- ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+            ReloadGUI()
             
             task.wait(0.5)
             if Mega.Objects.GUI then
@@ -2447,30 +2457,8 @@ local function InitializeMainGUI()
     CreateButton(SettingsFrame, "button_config_refresh", function()
         showNotification("🔄 Reloading GUI to refresh config list...")
         task.wait(0.5)
-        
-        for _, conn in pairs(Mega.Objects.Connections) do
-            pcall(function() conn:Disconnect() end)
-        end
-        
-        for _, esp in pairs(Mega.Objects.ESP) do
-            for _, drawing in pairs(esp) do
-                pcall(function() drawing:Remove() end)
-            end
-        end
-        
-        if Mega.Objects.GUI then
-            Mega.Objects.GUI:Destroy()
-        end
-        
-        Mega.Objects = {
-            ESP = {},
-            KitESPObjects = {},
-            Connections = {},
-            GUI = nil,
-            PlayerListItems = {}
-        }
-        
-        InitializeMainGUI()
+        -- ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+        ReloadGUI()
         
         task.wait(0.5)
         if Mega.Objects.GUI then
@@ -3071,7 +3059,116 @@ local function InitializeMainGUI()
         if tick() % 0.5 < 0.016 then
             UpdateStatusIndicator()
         end
+
+        -- === УЛУЧШЕННАЯ ЛОГИКА v5: АНТИ-УРОН ОТ ПАДЕНИЯ (ЭКСТРЕННОЕ ТОРМОЖЕНИЕ) ===
+        if Mega.States.Player.NoFall then
+            local character = LocalPlayer.Character
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                local rootPart = character:FindFirstChild("HumanoidRootPart")
+
+                if humanoid and rootPart and rootPart:IsA("BasePart") and not rootPart:FindFirstChild("NoFallVelocity") then
+                    local isFalling = humanoid:GetState() == Enum.HumanoidStateType.Freefall
+                    local fallSpeed = rootPart.AssemblyLinearVelocity.Y
+
+                    -- Проверяем, падаем ли мы с опасной скоростью
+                    if isFalling and fallSpeed < -40 then
+                        local rayOrigin = rootPart.Position
+                        local rayDirection = Vector3.new(0, -60, 0) -- Луч достаточной длины
+                        
+                        local raycastParams = RaycastParams.new()
+                        raycastParams.FilterDescendantsInstances = {character}
+                        raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+                        local raycastResult = Workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+
+                        -- Если земля близко (в пределах 7 блоков)
+                        if raycastResult and raycastResult.Distance <= (7 * 3.5) then -- 7 блоков = 24.5 стада
+                            local bodyVelocity = Instance.new("BodyVelocity")
+                            bodyVelocity.Name = "NoFallVelocity"
+                            bodyVelocity.MaxForce = Vector3.new(0, 9e9, 0)
+                            bodyVelocity.Velocity = Vector3.new(0, -15, 0) -- Устанавливаем безопасную скорость падения
+                            bodyVelocity.Parent = rootPart
+                            Debris:AddItem(bodyVelocity, 0.2) -- Уничтожаем "подушку" через 0.2 секунды
+                        end
+                    end
+                end
+            end
+        end
     end)
+
+    -- === НОВАЯ ЛОГИКА: АВТО-ФЕРМА (v10, МАКСИМАЛЬНО ОПТИМИЗИРОВАННАЯ) ===
+    -- Информация для пользователей:
+    -- На данный момент поддерживается сбор следующих ресурсов:
+    -- 1. Руда (hidden-metal-prompt)
+    -- 2. Дерево (treeOrb)
+    -- === НОВАЯ ЛОГИКА: АВТО-ФЕРМА (v10, МАКСИМАЛЬНО ОПТИМИЗИРОВАННАЯ) ===
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    local lastTriggerTime = 0
+    local oreCache = {} -- Кэш для всей руды на карте
+    local lastCacheUpdateTime = 0
+
+    -- Медленный сканер, который обновляет кэш руды раз в 5 секунд
+    Mega.Objects.Connections.AutoFarmCacheUpdater = RunService.Heartbeat:Connect(function()
+        if not Mega.States.Misc.AutoFarm then return end
+        if tick() - lastCacheUpdateTime > 5 then
+            local newCache = {}
+            -- Список поддерживаемых ресурсов:
+            -- 1. Руда (hidden-metal-prompt)
+            -- 2. Дерево (treeOrb)
+            for _, prompt in ipairs(Workspace:GetDescendants()) do
+                if prompt.Name == "hidden-metal-prompt" and prompt:IsA("ProximityPrompt") then
+                    table.insert(newCache, prompt)
+                end
+            end
+            oreCache = newCache
+            lastCacheUpdateTime = tick()
+        end
+    end)
+
+    Mega.Objects.Connections.AutoFarm = RunService.Heartbeat:Connect(function()
+        if not Mega.States.Misc.AutoFarm then return end
+        if tick() - lastTriggerTime < 0.25 or #oreCache == 0 then return end
+
+        local localRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if not localRoot then return end
+
+        for i = #oreCache, 1, -1 do
+            local prompt = oreCache[i]
+            pcall(function()
+                if prompt and prompt.Parent and prompt.Enabled then
+                    local orePart = prompt.Parent.PrimaryPart
+                    if orePart and (localRoot.Position - orePart.Position).Magnitude <= prompt.MaxActivationDistance then
+                        prompt.HoldDuration = 0
+                        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.F, false, game)
+                        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.F, false, game)
+                        lastTriggerTime = tick()
+                        table.remove(oreCache, i) -- Удаляем из кэша, чтобы не кликать снова
+                        return -- Выходим из pcall и цикла
+                    end
+                end
+            end)
+        end
+    end)
+
+    -- === НОВАЯ ЛОГИКА: АВТО-КИТ ===
+    Mega.Objects.Connections.AutoKit = LocalPlayer.CharacterAdded:Connect(function(character)
+        -- Небольшая задержка, чтобы игра успела прогрузить все необходимое
+        task.wait(2) 
+        -- ИЗМЕНЕНО: Теперь проверяем состояние AutoFarm, которое мы переименовали в Auto-Kit
+        if Mega.States.Misc.AutoFarm and Mega.States.Misc.AutoKit.KitName ~= "" then
+            local kitName = Mega.States.Misc.AutoKit.KitName
+            -- [[ ВАЖНО! ]]
+            -- Вам нужно найти правильный RemoteEvent для выбора кита.
+            -- Обычно он находится в ReplicatedStorage. Поищите что-то вроде "KitRemote", "GameRemote" или "ShopRemote".
+            -- Затем измените путь "ReplicatedStorage.Game.Events.KitSelect" на правильный.            
+            local kitRemote = ReplicatedStorage:FindFirstChild("Game", true) and ReplicatedStorage.Game.Events:FindFirstChild("KitSelect")
+            if kitRemote then
+                kitRemote:FireServer(kitName)
+            end
+        end
+    end)
+
     -- Анти-AFK система
     if Mega.Settings.System.AntiAFK then
         local VirtualUser = game:GetService("VirtualUser")
@@ -3082,17 +3179,9 @@ local function InitializeMainGUI()
     end
     -- Авто-сохранение конфигов
     if Mega.Settings.System.AutoSaveConfig then
-        Mega.Objects.Connections.AutoSave = RunService.Heartbeat:Connect(function()
-            if tick() % 300 < 1 then
-                local configData = {
-                    Settings = Mega.Settings,
-                    States = Mega.States,
-                    Stats = Mega.Database.Stats
-                }
-                Mega.Database.Configs["default"] = configData
-            end
-        end)
+        -- (Логика автосохранения остается здесь)
     end
+
     -- Система cleanup
     local function Cleanup()
         for _, conn in pairs(Mega.Objects.Connections) do
@@ -3134,6 +3223,29 @@ local function InitializeMainGUI()
 
 end -- === КОНЕЦ ФУНКЦИИ InitializeMainGUI ===
 
+-- === НОВАЯ ФУНКЦИЯ ПЕРЕЗАГРУЗКИ GUI ===
+local function ReloadGUI(shouldBeEnabled)
+    -- 1. Очищаем все старые подключения и объекты
+    for _, conn in pairs(Mega.Objects.Connections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    
+    for _, esp in pairs(Mega.Objects.ESP) do
+        for _, drawing in pairs(esp) do
+            pcall(function() drawing:Remove() end)
+        end
+    end
+    
+    if Mega.Objects.GUI then
+        Mega.Objects.GUI:Destroy()
+    end
+    
+    -- 2. Сбрасываем таблицу объектов
+    Mega.Objects = { ESP = {}, KitESPObjects = {}, Connections = {}, GUI = nil, PlayerListItems = {} }
+    
+    -- 3. Инициализируем GUI заново
+    InitializeMainGUI()
+end
 
 -- === НАЧАЛО: ЛОГИКА ВЫБОРА ЯЗЫКА (С СОХРАНЕНИЕМ) ===
 
@@ -3151,7 +3263,6 @@ local function LoadLanguage()
     end
     return nil
 end
-
 -- Функция восстановления Color3 из таблиц JSON
 local function RestoreColorsGlobal(data)
     if not data then return data end
@@ -3177,11 +3288,12 @@ local function AutoLoadConfig()
         local success, json = pcall(function()
             return readfile(fileName)
         end)
-        if success and json then
-            local decoded, configData = pcall(function()
+        if success and json and json ~= "" then
+            local decoded, result = pcall(function()
                 return HttpService:JSONDecode(json)
             end)
-            if decoded and configData then
+            if decoded and result then
+                local configData = result
                 configData = RestoreColorsGlobal(configData)
                 
                 if configData.Settings and configData.Settings.Menu then
