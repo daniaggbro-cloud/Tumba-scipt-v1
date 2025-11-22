@@ -137,7 +137,7 @@ local Mega = {
             }
         },
         Keybinds = {
-            Menu = "RightShift",
+            Menu = "Insert",
             AimAssist = "R"
         }
     },
@@ -408,6 +408,31 @@ local function GetText(key, ...)
     end
 end
 
+-- === ГЛОБАЛЬНАЯ ФУНКЦИЯ УВЕДОМЛЕНИЙ ===
+local function showGlobalNotification(message, duration)
+    duration = duration or 3
+
+    -- Создаем временный GUI для уведомления
+    local NotifGui = Instance.new("ScreenGui")
+    NotifGui.Name = "TumbaGlobalNotification"
+    NotifGui.Parent = CoreGui
+    NotifGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local notification = Instance.new("TextLabel")
+    notification.Size = UDim2.new(0, 300, 0, 50)
+    notification.Position = UDim2.new(1, -320, 0, 20) -- Правый верхний угол
+    notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notification.TextColor3 = Color3.new(1, 1, 1)
+    notification.Font = Enum.Font.SourceSansBold
+    notification.TextSize = 20
+    notification.Text = message
+    notification.AnchorPoint = Vector2.new(0, 0)
+    notification.Parent = NotifGui
+
+    -- Уничтожаем GUI и уведомление через указанное время
+    Debris:AddItem(NotifGui, duration)
+end
+
 -- === НОВАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ ГУИ ===
 -- Весь твой код теперь будет внутри этой функции
 local function InitializeMainGUI()
@@ -427,8 +452,12 @@ local function InitializeMainGUI()
     local espfold = Instance.new("Folder")
     espfold.Name = "KitESPFolder"
     local hidden = true -- Start hidden
-    
-    local function showNotification(message)
+
+    local function showNotification(message, duration, parentGui)
+        duration = duration or 3
+        parentGui = parentGui or Mega.Objects.GUI
+        -- Перенаправляем на новую глобальную функцию для консистентности
+        showGlobalNotification(message, duration)
         local notification = Instance.new("TextLabel")
         notification.Size = UDim2.new(0, 300, 0, 50)
         notification.Position = UDim2.new(0.5, -150, 0, 50)
@@ -438,9 +467,8 @@ local function InitializeMainGUI()
         notification.TextSize = 20
         notification.Text = message
         notification.AnchorPoint = Vector2.new(0.5, 0)
-        notification.Parent = Mega.Objects.GUI
-
-        Debris:AddItem(notification, 3)
+        notification.Parent = parentGui
+        Debris:AddItem(notification, duration)
     end
     
     local function espadd(v, icon)
@@ -3280,6 +3308,32 @@ local function RestoreColorsGlobal(data)
     return data
 end
 
+-- === ФУНКЦИЯ ДЛЯ СТАРТОВОГО УВЕДОМЛЕНИЯ ===
+local function ShowStartupNotification()
+    local StartupGui = Instance.new("ScreenGui")
+    StartupGui.Name = "StartupNotification"
+    StartupGui.Parent = CoreGui
+    StartupGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local notification = Instance.new("TextLabel")
+    notification.Size = UDim2.new(0, 300, 0, 50)
+    notification.Position = UDim2.new(1, -320, 0, 20) -- Правый верхний угол
+    notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notification.TextColor3 = Color3.new(1, 1, 1)
+    notification.Font = Enum.Font.SourceSansBold
+    notification.TextSize = 18
+    notification.Text = "Меню открывается на Insert"
+    notification.AnchorPoint = Vector2.new(0, 0)
+    notification.Parent = StartupGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = notification
+
+    -- Уничтожаем GUI и уведомление через 5 секунд
+    Debris:AddItem(StartupGui, 5)
+end
+
 -- Функция автозагрузки конфига
 local function AutoLoadConfig()
     local fileName = "TumbaConfig_default.json"
@@ -3331,6 +3385,9 @@ local function AutoLoadConfig()
     return false
 end
 
+-- Показываем уведомление СРАЗУ при запуске скрипта
+ShowStartupNotification()
+
 -- Проверяем, есть ли сохраненный язык
 local savedLanguage = LoadLanguage()
 
@@ -3342,6 +3399,8 @@ if savedLanguage then
     -- Автозагрузка конфига (если есть)
     AutoLoadConfig()
     
+    showGlobalNotification("Меню открывается на Insert", 5)
+
     InitializeMainGUI()
 else
     -- Если языка нет - показываем окно выбора
