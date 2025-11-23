@@ -32,12 +32,12 @@ local Mega = {
         Menu = {
             Width = 950,
             Height = 550,
-            BackgroundColor = Color3.fromRGB(15, 15, 20),
-            TitleBarColor = Color3.fromRGB(20, 25, 35),
-            AccentColor = Color3.fromRGB(0, 200, 255),
-            SecondaryColor = Color3.fromRGB(100, 50, 255),
+            BackgroundColor = Color3.fromRGB(20, 20, 30),      -- Dark Purple/Blue
+            TitleBarColor = Color3.fromRGB(30, 30, 45),        -- Darker Purple
+            AccentColor = Color3.fromRGB(200, 70, 255),       -- Vibrant Magenta
+            SecondaryColor = Color3.fromRGB(0, 255, 255),     -- Bright Cyan
             TextColor = Color3.fromRGB(255, 255, 255),
-            Transparency = 0.02,
+            Transparency = 0.1,
             CornerRadius = 12,
             AnimationSpeed = 0.25
         },
@@ -116,7 +116,9 @@ local Mega = {
             HighJumpPower = 50,
             Sprint = false,
             NoFall = false,
-            FollowTarget = nil
+            FollowTarget = nil,
+            SpinBot = false,
+            SpinSpeed = 10
         },
         Combat = {
             TriggerBot = false,
@@ -276,6 +278,8 @@ local Mega = {
             ["toggle_fly"] = { ru = "Режим полета", en = "Fly Mode", es = "Modo Vuelo", pt = "Modo Voo", ko = "비행 모드", ja = "フライモード", uk = "Режим польоту" },
             ["toggle_inf_jump"] = { ru = "Бесконечный прыжок", en = "Infinite Jump", es = "Salto Infinito", pt = "Pulo Infinito", ko = "무한 점프", ja = "無限ジャンプ", uk = "Нескінченний стрибок" },
             ["section_player_defense"] = { ru = "🛡️ ЗАЩИТА", en = "🛡️ DEFENSE", es = "🛡️ DEFENSA", pt = "🛡️ DEFESA", ko = "🛡️ 방어", ja = "🛡️ 防御", uk = "🛡️ ЗАХИСТ" },
+            ["toggle_spinbot"] = { ru = "Спин-бот", en = "Spin Bot", es = "Girar Bot", pt = "Bot de Giro", ko = "스핀 봇", ja = "スピンボット", uk = "Спін-бот" },
+            ["slider_spinspeed"] = { ru = "Скорость вращения", en = "Spin Speed", es = "Velocidad de Giro", pt = "Velocidade de Giro", ko = "회전 속도", ja = "回転速度", uk = "Швидкість обертання" },
             ["toggle_godmode"] = { ru = "Режим бога", en = "God Mode", es = "Modo Dios", pt = "Modo Deus", ko = "갓 모드", ja = "ゴッドモード", uk = "Режим бога" },
             ["toggle_noclip"] = { ru = "Ноклип", en = "Noclip", es = "Noclip", pt = "Noclip", ko = "노클립", ja = "ノークリップ", uk = "Нокліп" },
             ["toggle_antiknockback"] = { ru = "Анти-отбрасывание", en = "Anti-Knockback", es = "Anti-Retroceso", pt = "Anti-Recuo", ko = "넉백 방지", ja = "ノックバック無効", uk = "Анти-відкидання" },
@@ -595,10 +599,9 @@ local function InitializeMainGUI()
     MainFrame.Name = "MainFrame"
     MainFrame.Size = UDim2.new(0, 1100, 0, 650)
     MainFrame.Position = UDim2.new(0.5, -550, 0.5, -325)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
-    MainFrame.BackgroundTransparency = 0.02
-    MainFrame.BorderSizePixel = 2
-    MainFrame.BorderColor3 = Color3.fromRGB(255, 50, 50)
+    MainFrame.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    MainFrame.BackgroundTransparency = Mega.Settings.Menu.Transparency
+    MainFrame.BorderSizePixel = 0 -- Removed hard border for a cleaner look
     MainFrame.Active = true
     MainFrame.Draggable = true
     MainFrame.ClipsDescendants = false
@@ -612,7 +615,7 @@ local function InitializeMainGUI()
     Shadow.Position = UDim2.new(0, -20, 0, -20)
     Shadow.BackgroundTransparency = 1
     Shadow.Image = "rbxassetid://1316045217"
-    Shadow.ImageColor3 = Color3.fromRGB(0, 200, 255)
+    Shadow.ImageColor3 = Mega.Settings.Menu.AccentColor -- Use new accent color for the glow
     Shadow.ImageTransparency = 0.7
     Shadow.ScaleType = Enum.ScaleType.Slice
     Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
@@ -622,8 +625,8 @@ local function InitializeMainGUI()
     -- Градиент фона
     local MainGradient = Instance.new("UIGradient")
     MainGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 12, 18)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 18, 25))
+        ColorSequenceKeypoint.new(0, Mega.Settings.Menu.BackgroundColor),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 30, 45)) -- Slightly lighter purple
     }
     MainGradient.Rotation = 135
     MainGradient.Parent = MainFrame
@@ -642,10 +645,9 @@ local function InitializeMainGUI()
     
     -- Градиент для Title Bar (красный стиль Vape)
     local TitleGradient = Instance.new("UIGradient")
-    TitleGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 50, 50)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 30, 30)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
+    TitleGradient.Color = ColorSequence.new{ -- New Synthwave Gradient
+        ColorSequenceKeypoint.new(0, Mega.Settings.Menu.AccentColor),
+        ColorSequenceKeypoint.new(1, Mega.Settings.Menu.SecondaryColor)
     }
     TitleGradient.Rotation = 90
     TitleGradient.Parent = TitleBar
@@ -663,8 +665,8 @@ local function InitializeMainGUI()
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "CloseButton"
     CloseButton.Size = UDim2.new(0, 38, 0, 38)
-    CloseButton.Position = UDim2.new(1, -45, 0, 8)
-    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 70)
+    CloseButton.Position = UDim2.new(1, -48, 0.5, -19)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
     CloseButton.BackgroundTransparency = 0.1
     CloseButton.BorderSizePixel = 0
     CloseButton.Text = "✕"
@@ -677,10 +679,10 @@ local function InitializeMainGUI()
     CloseCorner.Parent = CloseButton
     
     CloseButton.MouseEnter:Connect(function()
-        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 80, 100)}):Play()
+        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 80, 100), TextColor3 = Color3.new(1,1,1)}):Play()
     end)
     CloseButton.MouseLeave:Connect(function()
-        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 70)}):Play()
+        TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 55), TextColor3 = Color3.fromRGB(200,200,220)}):Play()
     end)
     -- === БОКОВОЕ МЕНЮ (SIDEBAR) СЛЕВА ===
     local Sidebar = Instance.new("Frame")
@@ -736,31 +738,31 @@ local function InitializeMainGUI()
     StatusIndicator.Name = "StatusIndicator"
     StatusIndicator.Size = UDim2.new(0, 240, 0, 0)
     StatusIndicator.Position = UDim2.new(1, -250, 0, 10)
-    StatusIndicator.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-    StatusIndicator.BackgroundTransparency = 0.05
-    StatusIndicator.BorderSizePixel = 2
-    StatusIndicator.BorderColor3 = Color3.fromRGB(0, 200, 255)
+    StatusIndicator.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+    StatusIndicator.BackgroundTransparency = 0.1
+    StatusIndicator.BorderSizePixel = 1
+    StatusIndicator.BorderColor3 = Mega.Settings.Menu.AccentColor
     StatusIndicator.Parent = StatusGUI
     
     local StatusCorner = Instance.new("UICorner")
-    StatusCorner.CornerRadius = UDim.new(0, 10)
+    StatusCorner.CornerRadius = UDim.new(0, 8)
     StatusCorner.Parent = StatusIndicator
     
     local StatusGradient = Instance.new("UIGradient")
     StatusGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 15, 20)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 30, 40))
+        ColorSequenceKeypoint.new(0, Mega.Settings.Menu.BackgroundColor),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 50))
     }
     StatusGradient.Rotation = 135
     StatusGradient.Parent = StatusIndicator
     
     local StatusTitle = Instance.new("TextLabel")
-    StatusTitle.Name = "Title"
+    StatusTitle.Name = "StatusTitle"
     StatusTitle.Size = UDim2.new(1, 0, 0, 32)
     StatusTitle.Position = UDim2.new(0, 0, 0, 0)
     StatusTitle.BackgroundTransparency = 1
     StatusTitle.Text = "⚡ ACTIVE FEATURES ⚡"
-    StatusTitle.TextColor3 = Color3.fromRGB(0, 220, 255)
+    StatusTitle.TextColor3 = Mega.Settings.Menu.SecondaryColor
     StatusTitle.TextSize = 15
     StatusTitle.Font = Enum.Font.GothamBold
     StatusTitle.TextStrokeTransparency = 0.5
@@ -803,7 +805,7 @@ local function InitializeMainGUI()
             StatusItem.Size = UDim2.new(1, 0, 0, 20)
             StatusItem.BackgroundTransparency = 1
             StatusItem.Text = "▸ " .. text
-            StatusItem.TextColor3 = color or Color3.fromRGB(0, 255, 100)
+            StatusItem.TextColor3 = color or Mega.Settings.Menu.TextColor
             StatusItem.TextSize = 12
             StatusItem.Font = Enum.Font.GothamBold
             StatusItem.TextStrokeTransparency = 0.5
@@ -816,34 +818,34 @@ local function InitializeMainGUI()
         end
         
         if Mega.States.ESP.Enabled then
-            AddStatus("ESP", Color3.fromRGB(0, 255, 100))
+            AddStatus("ESP", Mega.Settings.Menu.SecondaryColor)
         end
         if Mega.States.KitESP.Enabled then
             AddStatus("Kit ESP", Color3.fromRGB(255, 165, 0))
         end
         if Mega.States.AimAssist.Enabled then
-            AddStatus("Aim Assist", Color3.fromRGB(255, 50, 100))
+            AddStatus("Aim Assist", Mega.Settings.Menu.AccentColor)
         end
         if Mega.States.Player.Speed then
-            AddStatus("Speed x" .. Mega.States.Player.SpeedValue, Color3.fromRGB(255, 255, 0))
+            AddStatus("Speed x" .. Mega.States.Player.SpeedValue, Color3.fromRGB(255, 220, 0))
         end
         if Mega.States.Player.Fly then
             AddStatus("Fly", Color3.fromRGB(100, 200, 255))
         end
         if Mega.States.Player.InfiniteJump then
-            AddStatus("Inf Jump", Color3.fromRGB(200, 150, 255))
+            AddStatus("Inf Jump", Mega.Settings.Menu.AccentColor)
         end
         if Mega.States.Player.NoClip then
             AddStatus("NoClip", Color3.fromRGB(150, 255, 150))
         end
         if Mega.States.Player.AntiKnockback then
-            AddStatus("Anti-KB " .. Mega.States.Player.KnockbackStrength .. "%", Color3.fromRGB(255, 200, 0))
+            AddStatus("Anti-KB " .. Mega.States.Player.KnockbackStrength .. "%", Color3.fromRGB(255, 180, 0))
         end
         if Mega.States.Player.FastBreak then
             AddStatus("Fast Break x" .. Mega.States.Player.BreakSpeed, Color3.fromRGB(255, 150, 50))
         end
         if Mega.States.Visuals.FullBright then
-            AddStatus("FullBright", Color3.fromRGB(255, 255, 150))
+            AddStatus("FullBright", Color3.fromRGB(255, 255, 200))
         end
         if Mega.States.Visuals.NoFog then
             AddStatus("No Fog", Color3.fromRGB(150, 200, 255))
@@ -1005,7 +1007,7 @@ local function InitializeMainGUI()
         SectionTitle.Position = UDim2.new(0, 15, 0, 0)
         SectionTitle.BackgroundTransparency = 1
         SectionTitle.Text = "💠 " .. GetText(titleKey)
-        SectionTitle.TextColor3 = Color3.fromRGB(0, 220, 255)
+        SectionTitle.TextColor3 = Mega.Settings.Menu.SecondaryColor
         SectionTitle.TextSize = 15
         SectionTitle.Font = Enum.Font.GothamBold
         SectionTitle.TextStrokeTransparency = 0.8
@@ -1041,8 +1043,8 @@ local function InitializeMainGUI()
         local ToggleButton = Instance.new("TextButton")
         ToggleButton.Name = "Toggle"
         ToggleButton.Size = UDim2.new(0, 50, 0, 25)
-        ToggleButton.Position = UDim2.new(1, -55, 0.5, -12.5)
-        ToggleButton.BackgroundColor3 = initialState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+        ToggleButton.Position = UDim2.new(1, -60, 0.5, -12.5)
+        ToggleButton.BackgroundColor3 = initialState and Mega.Settings.Menu.AccentColor or Color3.fromRGB(60, 60, 80)
         ToggleButton.BorderSizePixel = 0
         ToggleButton.Text = initialState and "ON" or "OFF"
         ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1058,7 +1060,7 @@ local function InitializeMainGUI()
 
         ToggleButton.MouseButton1Click:Connect(function()
             currentState = not currentState
-            ToggleButton.BackgroundColor3 = currentState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+            ToggleButton.BackgroundColor3 = currentState and Mega.Settings.Menu.AccentColor or Color3.fromRGB(60, 60, 80)
             ToggleButton.Text = currentState and "ON" or "OFF"
 
             if callback then
@@ -1111,8 +1113,8 @@ local function InitializeMainGUI()
         local ToggleButton = Instance.new("TextButton")
         ToggleButton.Name = "Toggle"
         ToggleButton.Size = UDim2.new(0, 50, 0, 25)
-        ToggleButton.Position = UDim2.new(1, -55, 0.5, -12.5)
-        ToggleButton.BackgroundColor3 = initialState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+        ToggleButton.Position = UDim2.new(1, -100, 0.5, -12.5)
+        ToggleButton.BackgroundColor3 = initialState and Mega.Settings.Menu.AccentColor or Color3.fromRGB(60, 60, 80)
         ToggleButton.BorderSizePixel = 0
         ToggleButton.Text = initialState and "ON" or "OFF"
         ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1129,7 +1131,7 @@ local function InitializeMainGUI()
 
         ToggleButton.MouseButton1Click:Connect(function()
             currentState = not currentState
-            ToggleButton.BackgroundColor3 = currentState and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+            ToggleButton.BackgroundColor3 = currentState and Mega.Settings.Menu.AccentColor or Color3.fromRGB(60, 60, 80)
             ToggleButton.Text = currentState and "ON" or "OFF"
 
             if callback then
@@ -1144,7 +1146,7 @@ local function InitializeMainGUI()
         local SettingsButton = Instance.new("TextButton")
         SettingsButton.Name = "SettingsButton"
         SettingsButton.Size = UDim2.new(0, 35, 0, 25)
-        SettingsButton.Position = UDim2.new(1, -55, 0.5, -12.5)
+        SettingsButton.Position = UDim2.new(1, -45, 0.5, -12.5)
         SettingsButton.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
         SettingsButton.BorderSizePixel = 0
         SettingsButton.Text = "⚙️"
@@ -1227,7 +1229,7 @@ local function InitializeMainGUI()
         DropdownButton.Name = "Button"
         DropdownButton.Size = UDim2.new(0.4, 0, 1, 0)
         DropdownButton.Position = UDim2.new(0.6, 0, 0, 0)
-        DropdownButton.BackgroundColor3 = Color3.fromRGB(50, 55, 70)
+        DropdownButton.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
         DropdownButton.BorderSizePixel = 0
         -- ИЗМЕНЕНО: Переводим initialValue, если это ключ
         DropdownButton.Text = optionsAreKeys and GetText(initialValue) or initialValue
@@ -1246,7 +1248,7 @@ local function InitializeMainGUI()
         DropdownList.Position = UDim2.new(0.6, 0, 1, 5)
         DropdownList.BackgroundTransparency = 0
         DropdownList.BackgroundColor3 = Color3.fromRGB(30, 35, 45)
-        DropdownList.BorderSizePixel = 1
+        DropdownList.BorderSizePixel = 0
         DropdownList.BorderColor3 = Color3.fromRGB(0, 180, 255)
         DropdownList.ScrollBarThickness = 4
         DropdownList.ScrollBarImageColor3 = Mega.Settings.Menu.AccentColor
@@ -1268,11 +1270,10 @@ local function InitializeMainGUI()
             local ListItem = Instance.new("TextButton")
             ListItem.Name = "Item" .. i
             ListItem.Size = UDim2.new(1, -8, 0, 32)
-            ListItem.Position = UDim2.new(0, 4, 0, 0)
-            ListItem.BackgroundColor3 = Color3.fromRGB(60, 70, 90)
+            ListItem.Position = UDim2.new(0.5, 0, 0, 0)
+            ListItem.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
             ListItem.BackgroundTransparency = 0
-            ListItem.BorderSizePixel = 1
-            ListItem.BorderColor3 = Color3.fromRGB(80, 90, 110)
+            ListItem.BorderSizePixel = 0
             ListItem.Text = translatedOption or "???"
             ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
             ListItem.TextSize = 14
@@ -1290,12 +1291,12 @@ local function InitializeMainGUI()
             ItemCorner.Parent = ListItem
             
             ListItem.MouseEnter:Connect(function()
-                ListItem.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+                ListItem.BackgroundColor3 = Mega.Settings.Menu.AccentColor
                 ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
             end)
             
             ListItem.MouseLeave:Connect(function()
-                ListItem.BackgroundColor3 = Color3.fromRGB(60, 70, 90)
+                ListItem.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
                 ListItem.TextColor3 = Color3.fromRGB(255, 255, 255)
             end)
 
@@ -1340,7 +1341,7 @@ local function InitializeMainGUI()
         local Button = Instance.new("TextButton")
         Button.Name = textKey .. "Button"
         Button.Size = UDim2.new(0.9, 0, 0, 40)
-        Button.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
+        Button.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
         Button.BorderSizePixel = 0
         Button.Text = GetText(textKey) -- ИЗМЕНЕНО
         Button.TextColor3 = Mega.Settings.Menu.TextColor
@@ -1351,6 +1352,14 @@ local function InitializeMainGUI()
         local ButtonCorner = Instance.new("UICorner")
         ButtonCorner.CornerRadius = UDim.new(0, 8)
         ButtonCorner.Parent = Button
+
+        Button.MouseEnter:Connect(function()
+            TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Mega.Settings.Menu.AccentColor}):Play()
+        end)
+
+        Button.MouseLeave:Connect(function()
+            TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 55)}):Play()
+        end)
 
         Button.MouseButton1Click:Connect(function()
             if callback and type(callback) == "function" then
@@ -1388,7 +1397,7 @@ local function InitializeMainGUI()
         SliderTrack.Name = "Track"
         SliderTrack.Size = UDim2.new(1, 0, 0, 6)
         SliderTrack.Position = UDim2.new(0, 0, 0, 35)
-        SliderTrack.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+        SliderTrack.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
         SliderTrack.BorderSizePixel = 0
 
         local TrackCorner = Instance.new("UICorner")
@@ -1481,7 +1490,7 @@ local function InitializeMainGUI()
         local TextBox = Instance.new("TextBox")
         TextBox.Name = "Input"
         TextBox.Size = UDim2.new(0.6, 0, 0, 25)
-        TextBox.Position = UDim2.new(0.4, 0, 0.5, -12.5)
+        TextBox.Position = UDim2.new(0.38, 0, 0.5, -12.5)
         TextBox.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
         TextBox.BorderSizePixel = 0
         TextBox.PlaceholderText = placeholderText
@@ -1531,7 +1540,7 @@ local function InitializeMainGUI()
         local KeybindButton = Instance.new("TextButton")
         KeybindButton.Name = "Button"
         KeybindButton.Size = UDim2.new(0.3, 0, 0, 25)
-        KeybindButton.Position = UDim2.new(0.7, 0, 0.5, -12.5)
+        KeybindButton.Position = UDim2.new(0.65, 0, 0.5, -12.5)
         KeybindButton.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
         KeybindButton.BorderSizePixel = 0
         KeybindButton.Text = currentKey or GetText("keybind_none") -- ИЗМЕНЕНО
@@ -1848,6 +1857,21 @@ local function InitializeMainGUI()
             end
         end
     end, speedSettingsElements)
+
+    local spinSettingsElements = {
+        CreateSlider(nil, "slider_spinspeed", 1, 50, Mega.States.Player.SpinSpeed or 10, function(value)
+            Mega.States.Player.SpinSpeed = value
+        end)
+    }
+
+    CreateToggleWithSettings(PlayerFrame, "toggle_spinbot", Mega.States.Player.SpinBot, function(state)
+        Mega.States.Player.SpinBot = state
+        if not state then
+            -- Restore original orientation if needed, though heartbeat will stop updating it.
+        end
+    end, spinSettingsElements)
+
+
 
     CreateToggle(PlayerFrame, "toggle_fly", Mega.States.Player.Fly, function(state)
         Mega.States.Player.Fly = state
@@ -2183,15 +2207,28 @@ local function InitializeMainGUI()
     CreateToggle(UtilsFrame, "toggle_fames_mom", Mega.States.Misc.FamesMom, function(state)
         Mega.States.Misc.FamesMom = state
         if state then
+            if not Mega.Objects.FamesMomOriginals then Mega.Objects.FamesMomOriginals = {} end
             Mega.Objects.Connections.FamesMomLoop = RunService.Heartbeat:Connect(function()
                 for _, player in ipairs(Players:GetPlayers()) do
                     if player ~= LocalPlayer and player.Character then
                         local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                        local head = player.Character:FindFirstChild("Head")
                         if humanoid then
                             humanoid.BodyWidthScale.Value = 3.0 -- Збільшено
                             humanoid.BodyDepthScale.Value = 3.0 -- Збільшено
                             humanoid.BodyHeightScale.Value = 1.0 -- Зменшено для ефекту "горили"
                             humanoid.HeadScale.Value = 2.5 -- Збільшено
+                        end
+                        if head then
+                            local faceDecal = head:FindFirstChild("face")
+                            if faceDecal and faceDecal:IsA("Decal") then
+                                -- Зберігаємо оригінальне обличчя, якщо ще не зберегли
+                                if not Mega.Objects.FamesMomOriginals[player] then
+                                    Mega.Objects.FamesMomOriginals[player] = faceDecal.Texture
+                                end
+                                -- Встановлюємо обличчя горили
+                                faceDecal.Texture = "rbxassetid://6495922755"
+                            end
                         end
                     end
                 end
@@ -2202,8 +2239,14 @@ local function InitializeMainGUI()
                 Mega.Objects.Connections.FamesMomLoop = nil
             end
             for _, player in ipairs(Players:GetPlayers()) do
-                if player ~= LocalPlayer and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-                    player.Character.Humanoid:BuildRigFromAttachments()
+                -- Попередній код мав тут помилку. Ось виправлена версія:
+                if player ~= LocalPlayer and player.Character then
+                    local head = player.Character:FindFirstChild("Head")
+                    local faceDecal = head and head:FindFirstChild("face")
+                    if faceDecal and Mega.Objects.FamesMomOriginals and Mega.Objects.FamesMomOriginals[player] then
+                        faceDecal.Texture = Mega.Objects.FamesMomOriginals[player] -- Повертаємо оригінальне обличчя
+                    end
+                    player.Character:FindFirstChildOfClass("Humanoid"):BuildRigFromAttachments() -- Скидаємо розміри тіла
                 end
             end
         end
@@ -2292,10 +2335,10 @@ local function InitializeMainGUI()
     CreateButton(SettingsFrame, "button_change_theme", function()
         local colors = {
             Color3.fromRGB(255, 50, 50), -- Красный
-            Color3.fromRGB(50, 255, 50), -- Зеленый
-            Color3.fromRGB(50, 150, 255), -- Синий
-            Color3.fromRGB(180, 50, 255), -- Фиолетовый
-            Color3.fromRGB(255, 150, 50) -- Оранжевый
+            Color3.fromRGB(0, 255, 255), -- Cyan
+            Color3.fromRGB(50, 255, 100), -- Green
+            Color3.fromRGB(200, 70, 255), -- Magenta
+            Color3.fromRGB(255, 165, 0) -- Orange
         }
 
         local newColor = colors[math.random(1, #colors)]
@@ -2560,11 +2603,50 @@ local function InitializeMainGUI()
         Mega.States.Player.FollowTarget = nil
         Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
         showNotification(GetText("notify_follow_stop"))
+        showNotification(GetText("notify_follow_stop"), 3, PlayerListFrame)
     end)
+
+    -- === НОВЫЙ ЗАГОЛОВОК СПИСКА ИГРОКОВ ===
+    local PlayerListHeader = Instance.new("Frame")
+    PlayerListHeader.Name = "PlayerListHeader"
+    PlayerListHeader.Size = UDim2.new(0.95, 0, 0, 30)
+    PlayerListHeader.BackgroundColor3 = Color3.fromRGB(40, 45, 60)
+    PlayerListHeader.BorderSizePixel = 0
+    PlayerListHeader.Parent = PlayerListFrame
+
+    local HeaderLayout = Instance.new("UIListLayout")
+    HeaderLayout.Parent = PlayerListHeader
+    HeaderLayout.FillDirection = Enum.FillDirection.Horizontal
+    HeaderLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    HeaderLayout.Padding = UDim.new(0, 5)
+    HeaderLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+
+    local HeaderCorner = Instance.new("UICorner")
+    HeaderCorner.CornerRadius = UDim.new(0, 5)
+    HeaderCorner.Parent = PlayerListHeader
+
+    local HeaderName = Instance.new("TextLabel")
+    HeaderName.Name = "HeaderName"
+    HeaderName.Size = UDim2.new(0.25, 0, 1, 0)
+    HeaderName.BackgroundTransparency = 1
+    HeaderName.TextColor3 = Mega.Settings.Menu.SecondaryColor
+    HeaderName.TextSize = 13
+    HeaderName.Font = Enum.Font.GothamBold
+    HeaderName.TextXAlignment = Enum.TextXAlignment.Left
+    HeaderName.Position = UDim2.new(0, 10, 0, 0)
+    HeaderName.Text = "  " .. GetText("playerlist_name")
+    HeaderName.Parent = PlayerListHeader
+
+    local HeaderTeam = HeaderName:Clone(); HeaderTeam.Name = "HeaderTeam"; HeaderTeam.Text = GetText("playerlist_team"); HeaderTeam.Parent = PlayerListHeader
+    local HeaderHP = HeaderName:Clone(); HeaderHP.Name = "HeaderHP"; HeaderHP.Size = UDim2.new(0.2, 0, 1, 0); HeaderHP.Text = GetText("playerlist_hp"); HeaderHP.Parent = PlayerListHeader
+    local HeaderDist = HeaderName:Clone(); HeaderDist.Name = "HeaderDist"; HeaderDist.Size = UDim2.new(0.25, 0, 1, 0); HeaderDist.Text = GetText("playerlist_dist"); HeaderDist.Parent = PlayerListHeader
+    -- === КОНЕЦ ЗАГОЛОВКА ===
 
     local PlayerListContainer = Instance.new("ScrollingFrame")
     PlayerListContainer.Name = "PlayersList"
     PlayerListContainer.Size = UDim2.new(0.95, 0, 1, -100) 
+    PlayerListContainer.Size = UDim2.new(0.95, 0, 1, -140) -- Скорректирован размер
+    PlayerListContainer.Position = UDim2.new(0.5, 0, 0, 135) -- Сдвинут вниз под заголовок
     PlayerListContainer.BackgroundTransparency = 1
     PlayerListContainer.BorderSizePixel = 0
     PlayerListContainer.ScrollBarThickness = 4
@@ -2730,7 +2812,9 @@ local function InitializeMainGUI()
             box = Drawing.new("Square"),
             name = Drawing.new("Text"),
             distance = Drawing.new("Text"),
-            health = Drawing.new("Text"),
+            -- health = Drawing.new("Text"), -- Старый текстовый хелсбар
+            healthBarBack = Drawing.new("Square"),
+            healthBarFront = Drawing.new("Square"),
             tracer = Drawing.new("Line")
         }
 
@@ -2751,12 +2835,18 @@ local function InitializeMainGUI()
         esp.distance.Outline = true
         esp.distance.ZIndex = 1
 
-        esp.health.Visible = false
-        esp.health.Size = 12
-        esp.health.Center = true
-        esp.health.Outline = true
-        esp.health.ZIndex = 1
-
+        --[[ esp.health.Visible = false
+         esp.health.Size = 12
+         esp.health.Center = true
+         esp.health.Outline = true
+         esp.health.ZIndex = 1 ]]
+        esp.healthBarBack.Visible = false
+        esp.healthBarBack.Thickness = 1
+        esp.healthBarBack.Color = Color3.fromRGB(0, 0, 0)
+        esp.healthBarBack.Filled = true
+        esp.healthBarFront.Visible = false
+        esp.healthBarFront.Thickness = 1
+        esp.healthBarFront.Filled = true
         esp.tracer.Visible = false
         esp.tracer.Thickness = 1
         esp.tracer.ZIndex = 1
@@ -2781,19 +2871,19 @@ local function InitializeMainGUI()
                     esp.box.Color = Mega.States.ESP.TeamColor
                     esp.name.Color = Mega.States.ESP.TeamColor
                     esp.distance.Color = Mega.States.ESP.TeamColor
-                    esp.health.Color = Mega.States.ESP.TeamColor
+                    -- esp.health.Color = Mega.States.ESP.TeamColor
                     esp.tracer.Color = Mega.States.ESP.TeamColor
                 elseif isEnemy then
                     esp.box.Color = Mega.States.ESP.EnemyColor
                     esp.name.Color = Mega.States.ESP.EnemyColor
                     esp.distance.Color = Mega.States.ESP.EnemyColor
-                    esp.health.Color = Mega.States.ESP.EnemyColor
+                    -- esp.health.Color = Mega.States.ESP.EnemyColor
                     esp.tracer.Color = Mega.States.ESP.EnemyColor
                 else
                     esp.box.Color = Mega.States.ESP.NeutralColor
                     esp.name.Color = Mega.States.ESP.NeutralColor
                     esp.distance.Color = Mega.States.ESP.NeutralColor
-                    esp.health.Color = Mega.States.ESP.NeutralColor
+                    -- esp.health.Color = Mega.States.ESP.NeutralColor
                     esp.tracer.Color = Mega.States.ESP.NeutralColor
                 end
             end
@@ -2843,11 +2933,21 @@ local function InitializeMainGUI()
                         end
 
                         if Mega.States.ESP.Health then
-                            esp.health.Visible = Mega.States.ESP.Enabled
-                            esp.health.Position = Vector2.new(screenPos.X, screenPos.Y + height / 2 + 30)
-                            esp.health.Text = GetText("esp_hp", math.floor(humanoid.Health)) -- ИЗМЕНЕНО
+                            local healthPercent = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+                            local barHeight = height * healthPercent
+                            local barColor = Color3.fromHSV(0.33 * healthPercent, 1, 1) -- От зеленого к красному
+
+                            esp.healthBarBack.Visible = Mega.States.ESP.Enabled
+                            esp.healthBarBack.Position = Vector2.new(screenPos.X - width / 2 - 7, screenPos.Y - height / 2)
+                            esp.healthBarBack.Size = Vector2.new(4, height)
+
+                            esp.healthBarFront.Visible = Mega.States.ESP.Enabled
+                            esp.healthBarFront.Color = barColor
+                            esp.healthBarFront.Position = Vector2.new(screenPos.X - width / 2 - 7, screenPos.Y - height / 2 + (height - barHeight))
+                            esp.healthBarFront.Size = Vector2.new(4, barHeight)
                         else
-                            esp.health.Visible = false
+                            esp.healthBarBack.Visible = false
+                            esp.healthBarFront.Visible = false
                         end
 
                         if Mega.States.ESP.Tracers then
@@ -2862,7 +2962,8 @@ local function InitializeMainGUI()
                         esp.box.Visible = false
                         esp.name.Visible = false
                         esp.distance.Visible = false
-                        esp.health.Visible = false
+                        esp.healthBarBack.Visible = false
+                        esp.healthBarFront.Visible = false
                         esp.tracer.Visible = false
                     end
                 end
@@ -2870,7 +2971,8 @@ local function InitializeMainGUI()
                 esp.box.Visible = false
                 esp.name.Visible = false
                 esp.distance.Visible = false
-                esp.health.Visible = false
+                esp.healthBarBack.Visible = false
+                esp.healthBarFront.Visible = false
                 esp.tracer.Visible = false
             end
         end
@@ -3086,7 +3188,8 @@ local function InitializeMainGUI()
                 esp.box.Visible = false
                 esp.name.Visible = false
                 esp.distance.Visible = false
-                esp.health.Visible = false
+                esp.healthBarBack.Visible = false
+                esp.healthBarFront.Visible = false
                 esp.tracer.Visible = false
             end
         end
@@ -3119,6 +3222,16 @@ local function InitializeMainGUI()
         -- Обновление индикатора активных функций
         if tick() % 0.5 < 0.016 then
             UpdateStatusIndicator()
+        end
+
+        -- === ЛОГИКА SPIN BOT ===
+        if Mega.States.Player.SpinBot then
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                local hrp = character.HumanoidRootPart
+                local spinSpeed = Mega.States.Player.SpinSpeed or 10
+                hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
+            end
         end
 
         -- === УЛУЧШЕННАЯ ЛОГИКА v5: АНТИ-УРОН ОТ ПАДЕНИЯ (ЭКСТРЕННОЕ ТОРМОЖЕНИЕ) ===
