@@ -140,7 +140,7 @@ local Mega = {
             }
         },
         Keybinds = {
-            Menu = "Insert",
+            Menu = "RightShift",
             AimAssist = "R"
         }
     },
@@ -3468,7 +3468,7 @@ local function ShowStartupNotification()
     notification.TextColor3 = Color3.new(1, 1, 1)
     notification.Font = Enum.Font.SourceSansBold
     notification.TextSize = 18
-    notification.Text = "Меню открывается на Insert"
+    notification.Text = "Меню открывается на RightShift"
     notification.AnchorPoint = Vector2.new(0, 0)
     notification.Parent = StartupGui
 
@@ -3545,7 +3545,7 @@ if savedLanguage then
     -- Автозагрузка конфига (если есть)
     AutoLoadConfig()
     
-    showGlobalNotification("Меню открывается на Insert", 5)
+    showGlobalNotification("Меню открывается на RightShift", 5)
 
     InitializeMainGUI()
 else
