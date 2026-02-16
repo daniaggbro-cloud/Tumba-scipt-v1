@@ -44,7 +44,7 @@ local Mega = {
         },
         System = {
             AntiAFK = true,
-            AutoSaveConfig = true,
+            AutoSave = true,
             PerformanceMode = false,
             DebugMode = false,
             Logging = true,
@@ -224,13 +224,11 @@ local Mega = {
         }
     },
     Database = {
-        Configs = {},
         Stats = {
             Kills = 0,
             Deaths = 0,
             Headshots = 0,
-            PlayTime = 0,
-            ConfigSaves = 0
+            PlayTime = 0
         }
     },
     Objects = {
@@ -254,11 +252,19 @@ local Mega = {
             ["notify_kit_esp_off"] = { ru = "Kit ESP выключен", en = "Kit ESP disabled", es = "Kit ESP deshabilitado", pt = "Kit ESP desativado", ko = "Kit ESP 비활성화됨", ja = "Kit ESP 無効", uk = "Kit ESP вимкнено" },
             ["notify_follow_start"] = { ru = "Слежение за %s включено", en = "Following %s enabled", es = "Seguimiento de %s habilitado", pt = "Seguindo %s ativado", ko = "%s 추적 활성화됨", ja = "%s 追跡有効", uk = "Стеження за %s увімкнено" },
             ["notify_follow_stop"] = { ru = "Слежение отключено", en = "Following disabled", es = "Seguimiento deshabilitado", pt = "Seguindo desativado", ko = "추적 비활성화됨", ja = "追跡無効", uk = "Стеження вимкнено" },
-            ["notify_config_saved"] = { ru = "Конфиг сохранен (#%d)", en = "Config saved (#%d)", es = "Configuración guardada (#%d)", pt = "Configuração salva (#%d)", ko = "설정 저장됨 (#%d)", ja = "設定保存 (#%d)", uk = "Конфіг збережено (#%d)" },
+            ["notify_keybind_set"] = { ru = "%s привязана к %s", en = "%s bound to %s", es = "%s asignado a %s", pt = "%s vinculado a %s", ko = "%s가 %s에 바인딩됨", ja = "%s が %s にバインド", uk = "%s прив'язано до %s" },
+            ["section_settings_config"] = { ru = "💾 УПРАВЛЕНИЕ КОНФИГАМИ", en = "💾 CONFIG MANAGEMENT", es = "💾 GESTIÓN DE CONFIGURACIONES", pt = "💾 GERENCIAMENTO DE CONFIG", ko = "💾 설정 관리", ja = "💾 設定管理", uk = "💾 КЕРУВАННЯ КОНФІГАМИ" },
+            ["textbox_config_name"] = { ru = "Введите имя конфига...", en = "Enter config name...", es = "Introduce nombre de config...", pt = "Digite nome do config...", ko = "설정 이름 입력...", ja = "設定名を入力...", uk = "Введіть ім'я конфігу..." },
+            ["button_config_save"] = { ru = "💾 Сохранить конфиг", en = "💾 Save Config", es = "💾 Guardar Configuración", pt = "💾 Salvar Configuração", ko = "💾 설정 저장", ja = "💾 設定保存", uk = "💾 Зберегти конфіг" },
+            ["dropdown_config_list"] = { ru = "Выберите конфиг", en = "Select Config", es = "Seleccionar Configuración", pt = "Selecionar Configuração", ko = "설정 선택", ja = "設定選択", uk = "Виберіть конфіг" },
+            ["button_config_load"] = { ru = "📂 Загрузить конфиг", en = "📂 Load Config", es = "📂 Cargar Configuración", pt = "📂 Carregar Configuração", ko = "📂 설정 로드", ja = "📂 設定読み込み", uk = "📂 Завантажити конфіг" },
+            ["button_config_delete"] = { ru = "🗑️ Удалить конфиг", en = "🗑️ Delete Config", es = "🗑️ Eliminar Configuración", pt = "🗑️ Deletar Configuração", ko = "🗑️ 설정 삭제", ja = "🗑️ 設定削除", uk = "🗑️ Видалити конфіг" },
+            ["button_config_refresh"] = { ru = "🔄 Обновить список", en = "🔄 Refresh List", es = "🔄 Actualizar Lista", pt = "🔄 Atualizar Lista", ko = "🔄 목록 새로고침", ja = "🔄 リスト更新", uk = "🔄 Оновити список" },
+            ["notify_config_saved"] = { ru = "Конфиг сохранен", en = "Config saved", es = "Configuración guardada", pt = "Configuração salva", ko = "설정 저장됨", ja = "設定保存", uk = "Конфіг збережено" },
             ["notify_config_loaded"] = { ru = "Конфиг загружен", en = "Config loaded", es = "Configuración cargada", pt = "Configuração carregada", ko = "설정 로드됨", ja = "設定読み込み", uk = "Конфіг завантажено" },
             ["notify_config_not_found"] = { ru = "Конфиг не найден", en = "Config not found", es = "Configuración no encontrada", pt = "Configuração não encontrada", ko = "설정 없음", ja = "設定が見つかりません", uk = "Конфіг не знайдено" },
-            ["notify_settings_reset"] = { ru = "Настройки сброшены", en = "Settings reset", es = "Configuraciones restablecidas", pt = "Configurações redefinidas", ko = "설정 초기화됨", ja = "設定リセット", uk = "Налаштування скинуто" },
-            ["notify_keybind_set"] = { ru = "%s привязана к %s", en = "%s bound to %s", es = "%s asignado a %s", pt = "%s vinculado a %s", ko = "%s가 %s에 바인딩됨", ja = "%s が %s にバインド", uk = "%s прив'язано до %s" },
+            ["notify_config_deleted"] = { ru = "🗑️ Конфиг удален", en = "🗑️ Config deleted", es = "🗑️ Configuración eliminada", pt = "🗑️ Configuração deletada", ko = "🗑️ 설정 삭제됨", ja = "🗑️ 設定削除", uk = "🗑️ Конфіг видалено" },
+            ["notify_enter_name"] = { ru = "⚠️ Введите имя конфига!", en = "⚠️ Enter config name!", es = "⚠️ ¡Introduce nombre!", pt = "⚠️ Digite o nome!", ko = "⚠️ 이름 입력!", ja = "⚠️ 名前を入力!", uk = "⚠️ Введіть ім'я конфігу!" },
             ["notify_fov_color_changed"] = { ru = "🎨 Цвет FOV изменен", en = "🎨 FOV color changed", es = "🎨 Color de FOV cambiado", pt = "🎨 Cor do FOV alterada", ko = "🎨 FOV 색상 변경됨", ja = "🎨 FOV 色変更", uk = "🎨 Колір FOV змінено" },
             ["notify_team_color_changed"] = { ru = "🎨 Цвет команды изменен", en = "🎨 Team color changed", es = "🎨 Color del equipo cambiado", pt = "🎨 Cor do time alterada", ko = "🎨 팀 색상 변경됨", ja = "🎨 チーム色変更", uk = "🎨 Колір команди змінено" },
             ["notify_enemy_color_changed"] = { ru = "🎨 Цвет врага изменен", en = "🎨 Enemy color changed", es = "🎨 Color del enemigo cambiado", pt = "🎨 Cor do inimigo alterada", ko = "🎨 적 색상 변경됨", ja = "🎨 敵色変更", uk = "🎨 Колір ворога змінено" },
@@ -343,7 +349,7 @@ local Mega = {
             ["section_updates_list"] = { ru = "✨ ЧТО НОВОГО В ЭТОЙ ВЕРСИИ?", en = "✨ WHAT'S NEW IN THIS VERSION?", es = "✨ ¿QUÉ HAY DE NUEVO EN ESTA VERSIÓN?", pt = "✨ O QUE HÁ DE NOVO NESTA VERSÃO?", ko = "✨ 이번 버전의 새로운 기능", ja = "✨ このバージョンの新機能", uk = "✨ ЩО НОВОГО В ЦІЙ ВЕРСІЇ?" },
             ["update_text_v5_1"] = { ru = "• [Игрок] Добавлена функция 'Анти-урон от падения BETA'.\n• [Кит] Добавлен 'Авто-кит BETA' для сбора ресурсов (металл, дерево). В будущем список будет расширен.", en = "• [Player] Added 'No Fall Damage BETA' feature.\n• [Kit] Added 'Auto-Kit BETA' for resource gathering (metal, wood). The list will be expanded in the future.", es = "• [Jugador] Añadida la función 'Sin Daño por Caída BETA'.\n• [Kit] Añadido 'Auto-Kit BETA' para recolección de recursos (metal, madera). La lista se ampliará en el futuro.", pt = "• [Jogador] Adicionada a função 'Sem Dano de Queda BETA'.\n• [Kit] Adicionado 'Auto-Kit BETA' para coleta de recursos (metal, madeira). A lista será expandida no futuro.", ko = "• [플레이어] '낙하 피해 없음 BETA' 기능 추가.\n• [키트] 자원 수집을 위한 '자동 키트 BETA' 추가 (금속, 나무). 목록은 추후 확장될 예정입니다.", ja = "• [プレイヤー]「落下ダメージなし BETA」機能を追加。\n• [キット] リソース収集用の「自動キット BETA」を追加（金属、木材）。リストは将来的に拡張されます。", uk = "• [Гравець] Додано функцію 'Анти-шкода від падіння BETA'.\n• [Кіт] Додано 'Авто-кіт BETA' для збору ресурсів (метал, дерево). У майбутньому список буде розширено." },
             ["section_status"] = { ru = "💎 СИСТЕМНЫЙ СТАТУС", en = "💎 SYSTEM STATUS", es = "💎 ESTADO DEL SISTEMA", pt = "💎 STATUS DO SISTEMA", ko = "💎 시스템 상태", ja = "💎 システムステータス", uk = "💎 СИСТЕМНИЙ СТАТУС" },
-            ["toggle_autosave"] = { ru = "🔄 Авто-сохранение конфигов", en = "🔄 Auto-save configs", es = "🔄 Guardado automático de configuraciones", pt = "🔄 Salvar configs automaticamente", ko = "🔄 자동 저장 설정", ja = "🔄 自動保存設定", uk = "🔄 Авто-збереження конфігів" },
+            ["toggle_autosave"] = { ru = "💾 Авто-сохранение (15с)", en = "💾 Auto-Save (15s)", es = "💾 Auto-Guardado (15s)", pt = "💾 Auto-Salvar (15s)", ko = "💾 자동 저장 (15초)", ja = "💾 自動保存 (15초)", uk = "💾 Авто-збереження (15с)" },
             ["toggle_perf_mode"] = { ru = "⚡ Режим производительности", en = "⚡ Performance Mode", es = "⚡ Modo de rendimiento", pt = "⚡ Modo de desempenho", ko = "⚡ 성능 모드", ja = "⚡ パフォーマンスモード", uk = "⚡ Режим продуктивності" },
             ["toggle_status_indicator"] = { ru = "📊 Показывать индикатор функций", en = "📊 Show Status Indicator", es = "📊 Mostrar Indicador de Estado", pt = "📊 Mostrar Indicador de Status", ko = "📊 상태 표시기 표시", ja = "📊 ステータスインジケーター表示", uk = "📊 Показувати індикатор функцій" },
             ["section_quick_access"] = { ru = "🚀 БЫСТРЫЙ ДОСТУП", en = "🚀 QUICK ACCESS", es = "🚀 ACCESO RÁPIDO", pt = "🚀 ACESSO RÁPIDO", ko = "🚀 빠른 액세스", ja = "🚀 クイックアクセス", uk = "🚀 ШВИДКИЙ ДОСТУП" },
@@ -351,7 +357,7 @@ local Mega = {
             ["button_aim_toggle"] = { ru = "🎯 ВКЛ/ВЫКЛ Aim Assist", en = "🎯 TOGGLE Aim Assist", es = "🎯 ACTIVAR/DESACTIVAR Ayuda de puntería", pt = "🎯 LIGAR/DESLIGAR Assistência de Mira", ko = "🎯 조준 보조 토글", ja = "🎯 エイムアシスト トグル", uk = "🎯 УВІМ/ВИМК Aim Assist" },
             ["button_speed_toggle"] = { ru = "⚡ ВКЛ/ВЫКЛ Speed Hack", en = "⚡ TOGGLE Speed Hack", es = "⚡ ACTIVAR/DESACTIVAR Hack de velocidad", pt = "⚡ LIGAR/DESLIGAR Hack de Velocidade", ko = "⚡ 속도 해킹 토글", ja = "⚡ スピードハック トグル", uk = "⚡ УВІМ/ВИМК Speed Hack" },
             ["section_stats"] = { ru = "📊 СТАТИСТИКА СИСТЕМЫ", en = "📊 SYSTEM STATISTICS", es = "📊 ESTADÍSTICAS DEL SISTEMA", pt = "📊 ESTATÍSTICAS DO SISTEMA", ko = "📊 시스템 통계", ja = "📊 システム統計", uk = "📊 СТАТИСТИКА СИСТЕМИ" },
-            ["stats_label"] = { ru = "📈 СТАТИСТИКА:\n🎯 Убийств: %d\n💀 Смертей: %d\n🎮 Время игры: %dм\n💾 Конфигов сохранено: %d", en = "📈 STATISTICS:\n🎯 Kills: %d\n💀 Deaths: %d\n🎮 Play Time: %dm\n💾 Config Saves: %d", es = "📈 ESTADÍSTICAS:\n🎯 Asesinatos: %d\n💀 Muertes: %d\n🎮 Tiempo de juego: %dm\n💾 Guardados de config: %d", pt = "📈 ESTATÍSTICAS:\n🎯 Mortes: %d\n💀 Mortes: %d\n🎮 Tempo de jogo: %dm\n💾 Salvar configs: %d", ko = "📈 통계:\n🎯 킬: %d\n💀 데스: %d\n🎮 플레이 시간: %dm\n💾 설정 저장: %d", ja = "📈 統計:\n🎯 キル: %d\n💀 デス: %d\n🎮 プレイ時間: %dm\n💾 設定保存: %d", uk = "📈 СТАТИСТИКА:\n🎯 Вбивств: %d\n💀 Смертей: %d\n🎮 Час гри: %dхв\n💾 Конфігів збережено: %d" },
+            ["stats_label"] = { ru = "📈 СТАТИСТИКА:\n🎯 Убийств: %d\n💀 Смертей: %d\n🎮 Время игры: %dм", en = "📈 STATISTICS:\n🎯 Kills: %d\n💀 Deaths: %d\n🎮 Play Time: %dm", es = "📈 ESTADÍSTICAS:\n🎯 Asesinatos: %d\n💀 Muertes: %d\n🎮 Tiempo de juego: %dm", pt = "📈 ESTATÍSTICAS:\n🎯 Mortes: %d\n💀 Mortes: %d\n🎮 Tempo de jogo: %dm", ko = "📈 통계:\n🎯 킬: %d\n💀 데스: %d\n🎮 플레이 시간: %dm", ja = "📈 統計:\n🎯 キル: %d\n💀 デス: %d\n🎮 プレイ時間: %dm", uk = "📈 СТАТИСТИКА:\n🎯 Вбивств: %d\n💀 Смертей: %d\n🎮 Час гри: %dхв" },
 
             -- Вкладка: ESP
             ["section_esp_main"] = { ru = "👁️ ОСНОВНЫЕ НАСТРОЙКИ ESP (Игроки)", en = "👁️ MAIN ESP SETTINGS (Players)", es = "👁️ CONFIGURACIONES PRINCIPALES DE ESP (Jugadores)", pt = "👁️ CONFIGURAÇÕES PRINCIPAIS DE ESP (Jogadores)", ko = "👁️ 주요 ESP 설정 (플레이어)", ja = "👁️ メインESP設定 (プレイヤー)", uk = "👁️ ОСНОВНІ НАЛАШТУВАННЯ ESP (Гравці)" },
@@ -489,16 +495,6 @@ local Mega = {
             ["language_ukrainian"] = { ru = "Украинский", en = "Ukrainian", es = "Ucraniano", pt = "Ucraniano", ko = "우크라이나어", ja = "ウクライナ語", uk = "Українська" },
             ["notify_language_changed"] = { ru = "🌍 Язык изменен на: %s", en = "🌍 Language changed to: %s", es = "🌍 Idioma cambiado a: %s", pt = "🌍 Idioma alterado para: %s", ko = "🌍 언어 변경됨: %s", ja = "🌍 言語変更: %s", uk = "🌍 Мову змінено на: %s" },
             ["keybind_menu"] = { ru = "🔑 Изменить клавишу меню", en = "🔑 Change Menu Key", es = "🔑 Cambiar Tecla del Menú", pt = "🔑 Alterar Tecla do Menu", ko = "🔑 메뉴 키 변경", ja = "🔑 メニューキー変更", uk = "🔑 Змінити клавішу меню" },
-            ["section_settings_config"] = { ru = "💾 УПРАВЛЕНИЕ КОНФИГАМИ", en = "💾 CONFIG MANAGEMENT", es = "💾 GESTIÓN DE CONFIGURACIONES", pt = "💾 GERENCIAMENTO DE CONFIG", ko = "💾 설정 관리", ja = "💾 設定管理", uk = "💾 КЕРУВАННЯ КОНФІГАМИ" },
-            ["textbox_config_name"] = { ru = "Введите имя конфига...", en = "Enter config name...", es = "Introduce nombre de config...", pt = "Digite nome do config...", ko = "설정 이름 입력...", ja = "設定名を入力...", uk = "Введіть ім'я конфігу..." },
-            ["button_config_save"] = { ru = "💾 Сохранить конфиг", en = "💾 Save Config", es = "💾 Guardar Configuración", pt = "💾 Salvar Configuração", ko = "💾 설정 저장", ja = "💾 設定保存", uk = "💾 Зберегти конфіг" },
-            ["dropdown_config_list"] = { ru = "Выберите конфиг", en = "Select Config", es = "Seleccionar Configuración", pt = "Selecionar Configuração", ko = "설정 선택", ja = "設定選択", uk = "Виберіть конфіг" },
-            ["button_config_load"] = { ru = "📂 Загрузить конфиг", en = "📂 Load Config", es = "📂 Cargar Configuración", pt = "📂 Carregar Configuração", ko = "📂 설정 로드", ja = "📂 設定読み込み", uk = "📂 Завантажити конфіг" },
-            ["button_config_delete"] = { ru = "🗑️ Удалить конфиг", en = "🗑️ Delete Config", es = "🗑️ Eliminar Configuración", pt = "🗑️ Deletar Configuração", ko = "🗑️ 설정 삭제", ja = "🗑️ 設定削除", uk = "🗑️ Видалити конфіг" },
-            ["button_config_refresh"] = { ru = "🔄 Обновить список", en = "🔄 Refresh List", es = "🔄 Actualizar Lista", pt = "🔄 Atualizar Lista", ko = "🔄 목록 새로고침", ja = "🔄 リスト更新", uk = "🔄 Оновити список" },
-            ["button_config_reset"] = { ru = "🔄 Сбросить настройки", en = "🔄 Reset Settings", es = "🔄 Restablecer Configuraciones", pt = "🔄 Redefinir Configurações", ko = "🔄 설정 초기화", ja = "🔄 設定リセット", uk = "🔄 Скинути налаштування" },
-            ["notify_config_deleted"] = { ru = "🗑️ Конфиг удален", en = "🗑️ Config deleted", es = "🗑️ Configuración eliminada", pt = "🗑️ Configuração deletada", ko = "🗑️ 설정 삭제됨", ja = "🗑️ 設定削除", uk = "🗑️ Конфіг видалено" },
-            ["notify_enter_name"] = { ru = "⚠️ Введите имя конфига!", en = "⚠️ Enter config name!", es = "⚠️ ¡Introduce nombre!", pt = "⚠️ Digite o nome!", ko = "⚠️ 이름 입력!", ja = "⚠️ 名前を入力!", uk = "⚠️ Введіть ім'я конфігу!" },
             ["button_cleanup"] = { ru = "🗑️ Очистить и выгрузить скрипт", en = "🗑️ Cleanup and Unload Script", es = "🗑️ Limpiar y Descargar Script", pt = "🗑️ Limpar e Descarregar Script", ko = "🗑️ 정리 및 스크립트 언로드", ja = "🗑️ クリーンアップとスクリプトアンロード", uk = "🗑️ Очистити та вивантажити скрипт" },
 
             -- Вкладка: Игроки
@@ -542,6 +538,106 @@ local Mega = {
         }
     }
 }
+
+-- === СИСТЕМА КОНФИГУРАЦИЙ (JSON) ===
+Mega.ConfigSystem = {}
+
+function Mega.ConfigSystem.Sanitize(data)
+    local copy = {}
+    for k, v in pairs(data) do
+        if type(v) == "table" then
+            copy[k] = Mega.ConfigSystem.Sanitize(v)
+        elseif typeof(v) == "Color3" then
+            copy[k] = { _type = "Color3", R = v.R, G = v.G, B = v.B }
+        elseif typeof(v) == "EnumItem" then
+            copy[k] = { _type = "Enum", EnumType = tostring(v.EnumType), Name = v.Name }
+        elseif typeof(v) == "Instance" then
+            copy[k] = nil
+        else
+            copy[k] = v
+        end
+    end
+    return copy
+end
+
+function Mega.ConfigSystem.Reconstruct(data)
+    local copy = {}
+    for k, v in pairs(data) do
+        if type(v) == "table" then
+            if v._type == "Color3" then
+                copy[k] = Color3.new(v.R, v.G, v.B)
+            elseif v._type == "Enum" then
+                local success, result = pcall(function() return Enum[tostring(v.EnumType)][v.Name] end)
+                if success then copy[k] = result else copy[k] = v.Name end
+            else
+                copy[k] = Mega.ConfigSystem.Reconstruct(v)
+            end
+        else
+            copy[k] = v
+        end
+    end
+    return copy
+end
+
+function Mega.ConfigSystem.Save(name)
+    if not writefile then return false end
+    local data = {
+        Settings = Mega.Settings,
+        States = Mega.States,
+        Stats = Mega.Database.Stats,
+        Language = Mega.Localization.CurrentLanguage
+    }
+    local json = HttpService:JSONEncode(Mega.ConfigSystem.Sanitize(data))
+    writefile("TumbaConfig_" .. name .. ".json", json)
+    return true
+end
+
+function Mega.ConfigSystem.Load(name)
+    if not readfile or not isfile then return false end
+    local file = "TumbaConfig_" .. name .. ".json"
+    if not isfile(file) then return false end
+    
+    local success, json = pcall(readfile, file)
+    if not success then return false end
+    
+    local successDecode, data = pcall(function() return HttpService:JSONDecode(json) end)
+    if not successDecode then return false end
+    
+    data = Mega.ConfigSystem.Reconstruct(data)
+    
+    if data.Settings then
+        if data.Settings.Menu then for k,v in pairs(data.Settings.Menu) do Mega.Settings.Menu[k] = v end end
+        if data.Settings.System then for k,v in pairs(data.Settings.System) do Mega.Settings.System[k] = v end end
+    end
+    if data.States then
+        for cat, vars in pairs(data.States) do
+            if Mega.States[cat] then
+                for k,v in pairs(vars) do Mega.States[cat][k] = v end
+            end
+        end
+    end
+    if data.Stats then Mega.Database.Stats = data.Stats end
+    if data.Language then Mega.Localization.CurrentLanguage = data.Language end
+    
+    return true
+end
+
+function Mega.ConfigSystem.GetList()
+    local list = {}
+    if listfiles then
+        local success, files = pcall(listfiles, "")
+        if not success then success, files = pcall(listfiles) end
+        if success and files then
+            for _, file in ipairs(files) do
+                if file:find("TumbaConfig_") and file:find(".json") then
+                    local name = file:match("TumbaConfig_(.+)%.json")
+                    if name then table.insert(list, name) end
+                end
+            end
+        end
+    end
+    return list
+end
 
 -- === НОВЫЙ "ПЕРЕВОДЧИК" ===
 ---@param key string
@@ -1269,6 +1365,11 @@ local function InitializeMainGUI()
         ToggleButton.Parent = ToggleFrame
         ToggleFrame.Parent = parent
 
+        -- АВТО-ЗАПУСК ФУНКЦИИ ПРИ ЗАГРУЗКЕ
+        if initialState and callback then
+            task.spawn(function() callback(true) end)
+        end
+
         return ToggleFrame
     end
 
@@ -1775,8 +1876,8 @@ local function InitializeMainGUI()
     -- Вкладка ГЛАВНАЯ
     local HomeFrame = TabFrames[GetText("tab_home")]
     CreateSection(HomeFrame, "section_status")
-    CreateToggle(HomeFrame, "toggle_autosave", Mega.Settings.System.AutoSaveConfig, function(state)
-        Mega.Settings.System.AutoSaveConfig = state
+    CreateToggle(HomeFrame, "toggle_autosave", Mega.Settings.System.AutoSave, function(state)
+        Mega.Settings.System.AutoSave = state
     end)
     CreateToggle(HomeFrame, "toggle_perf_mode", Mega.Settings.System.PerformanceMode, function(state)
         Mega.Settings.System.PerformanceMode = state
@@ -1818,8 +1919,7 @@ local function InitializeMainGUI()
     StatsLabel.Text = GetText("stats_label",
         Mega.Database.Stats.Kills,
         Mega.Database.Stats.Deaths,
-        Mega.Database.Stats.PlayTime,
-        Mega.Database.Stats.ConfigSaves
+        Mega.Database.Stats.PlayTime
     )
     StatsLabel.TextColor3 = Mega.Settings.Menu.TextColor
     StatsLabel.TextSize = 12
@@ -3434,261 +3534,56 @@ local function InitializeMainGUI()
     CreateKeybindButton(SettingsFrame, "keybind_menu", Mega.States.Keybinds.Menu, function(key)
         Mega.States.Keybinds.Menu = key
     end)
-    local function GetConfigList()
-        local configs = {}
-        local foundConfigs = {}
-        
-        foundConfigs["default"] = true
-        table.insert(configs, "default")
-        
-        if listfiles then
-            local attempts = { "", ".", "./" }
-            local files = nil
-            
-            -- Try different arguments for listfiles
-            for _, path in ipairs(attempts) do
-                local success, result = pcall(listfiles, path)
-                if success and type(result) == "table" and #result > 0 then
-                    files = result
-                    break
-                end
-            end
-            
-            -- Fallback to no argument
-            if not files then
-                local success, result = pcall(listfiles)
-                if success and type(result) == "table" then
-                    files = result
-                end
-            end
-            
-            if files then
-                for _, file in pairs(files) do
-                    if type(file) == "string" then
-                        -- Normalize slashes
-                        local name = file:gsub("\\", "/")
-                        -- Get just the filename
-                        name = name:match("([^/]+)$") or name
-                        
-                        if name:sub(1, 12) == "BaconConfig_" and name:sub(-5) == ".json" then
-                            local configName = name:sub(13, -6) -- Remove prefix and suffix
-                            if configName ~= "" and not foundConfigs[configName] then
-                                foundConfigs[configName] = true
-                                table.insert(configs, configName)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        
-        for configName, _ in pairs(Mega.Database.Configs) do
-            if not foundConfigs[configName] then
-                foundConfigs[configName] = true
-                table.insert(configs, configName)
-                print("💾 Found config in memory: " .. configName)
-            end
-        end
-        
-        print("📋 Total configs found: " .. #configs)
-        return configs
-    end
     
     CreateSection(SettingsFrame, "section_settings_config")
     
-    -- Функция очистки данных перед сохранением (удаление Instance, Enum в строку и т.д.)
-    local function SanitizeConfig(data)
-        if type(data) == "table" then
-            local new = {}
-            for k, v in pairs(data) do
-                local sanitizedV = SanitizeConfig(v)
-                if sanitizedV ~= nil then
-                    new[k] = sanitizedV
-                end
-            end
-            return new
-        elseif typeof(data) == "Color3" then
-            return {R = data.R, G = data.G, B = data.B}
-        elseif typeof(data) == "EnumItem" then
-            return data.Name
-        elseif typeof(data) == "Instance" then
-            return nil
-        end
-        return data
-    end
-
     local configNameFrame, configNameBox = CreateTextBox(SettingsFrame, "textbox_config_name", GetText("textbox_config_name"))
     local selectedConfigName = "default"
     
     CreateButton(SettingsFrame, "button_config_save", function()
-        local configName = configNameBox.Text
-        if configName == "" or configName == GetText("textbox_config_name") then
+        local name = configNameBox.Text
+        if name == "" or name == GetText("textbox_config_name") then
             showNotification(GetText("notify_enter_name"))
             return
         end
         
-        local configData = SanitizeConfig({
-            Settings = Mega.Settings,
-            States = Mega.States,
-            Stats = Mega.Database.Stats,
-            Language = Mega.Localization.CurrentLanguage
-        })
-
-        Mega.Database.Configs[configName] = configData
-        Mega.Database.Stats.ConfigSaves = Mega.Database.Stats.ConfigSaves + 1
-        
-        if writefile and HttpService then
-            local jsonConfig = HttpService:JSONEncode(configData)
-            writefile("BaconConfig_" .. configName .. ".json", jsonConfig)
+        if Mega.ConfigSystem.Save(name) then
+            showNotification(GetText("notify_config_saved"))
+            configNameBox.Text = ""
+            task.delay(0.5, function() ReloadGUI() end)
         end
-        
-        showNotification(GetText("notify_config_saved", Mega.Database.Stats.ConfigSaves))
-        configNameBox.Text = ""
-        
-        -- Auto refresh GUI to show new config in dropdown
-        task.delay(0.5, function()
-             ReloadGUI()
-        end)
     end)
     
-    local configList = GetConfigList()
-    local configDropdown = CreateDropdown(SettingsFrame, "dropdown_config_list", configList, configList[1] or "default", function(selected)
-        if selected and selected ~= "" then
-            selectedConfigName = selected
-            print("📂 Selected config: " .. selected)
-        end
+    local configList = Mega.ConfigSystem.GetList()
+    if #configList == 0 then table.insert(configList, "default") end
+    
+    CreateDropdown(SettingsFrame, "dropdown_config_list", configList, configList[1] or "default", function(val)
+        selectedConfigName = val
     end, false)
     
     CreateButton(SettingsFrame, "button_config_load", function()
-        local configData = nil
-        local fileName = "BaconConfig_" .. selectedConfigName .. ".json"
-        
-        if readfile and isfile and isfile(fileName) and HttpService then
-            local success, json = pcall(function()
-                return readfile(fileName)
-            end)
-            if success then
-                local decoded = pcall(function()
-                    return HttpService:JSONDecode(json)
-                end)
-                if decoded then
-                    configData = HttpService:JSONDecode(json)
-                end
-            end
-        end
-        
-        if not configData then
-            configData = Mega.Database.Configs[selectedConfigName]
-        end
-        
-        if configData then
-            configData = RestoreColorsGlobal(configData)
-            
-            if configData.Settings and configData.Settings.Menu then
-                for key, value in pairs(configData.Settings.Menu) do
-                    if typeof(value) == "Color3" or (type(value) == "table" and value.R) then
-                        Mega.Settings.Menu[key] = typeof(value) == "Color3" and value or Color3.new(value.R, value.G, value.B)
-                    else
-                        Mega.Settings.Menu[key] = value
-                    end
-                end
-                if configData.Settings.System then
-                    Mega.Settings.System = configData.Settings.System
-                end
-            end
-            
-            if configData.States then
-                for category, settings in pairs(configData.States) do
-                    if Mega.States[category] then
-                        for key, value in pairs(settings) do
-                            Mega.States[category][key] = value
-                        end
-                    end
-                end
-            end
-            
-            if configData.Stats then
-                Mega.Database.Stats = configData.Stats
-            end
-            
-            if configData.Language and configData.Language ~= Mega.Localization.CurrentLanguage then
-                Mega.Localization.CurrentLanguage = configData.Language
-                if writefile then
-                    writefile("TumbaLanguage.txt", configData.Language)
-                end
-            end
-
+        if Mega.ConfigSystem.Load(selectedConfigName) then
             showNotification(GetText("notify_config_loaded"))
-            
             task.wait(0.5)
-            -- ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
             ReloadGUI()
-            
-            task.wait(0.5)
-            if Mega.Objects.GUI then
-                Mega.Objects.GUI.Enabled = true
-            end
         else
             showNotification(GetText("notify_config_not_found"))
         end
     end)
     
     CreateButton(SettingsFrame, "button_config_delete", function()
-        if selectedConfigName == "default" then
-            showNotification("⚠️ Cannot delete default config")
-            return
-        end
-        
-        local fileName = "BaconConfig_" .. selectedConfigName .. ".json"
-        if delfile and isfile and isfile(fileName) then
-            delfile(fileName)
+        if selectedConfigName == "default" then return end
+        if delfile and isfile("TumbaConfig_" .. selectedConfigName .. ".json") then
+            delfile("TumbaConfig_" .. selectedConfigName .. ".json")
             showNotification(GetText("notify_config_deleted"))
-            selectedConfigName = "default"
-            
-            task.delay(0.5, function()
-                 ReloadGUI()
-            end)
+            task.wait(0.5)
+            ReloadGUI()
         end
     end)
     
     CreateButton(SettingsFrame, "button_config_refresh", function()
-        showNotification("🔄 Reloading GUI to refresh config list...")
-        task.wait(0.5)
-        -- ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
         ReloadGUI()
-        
-        task.wait(0.5)
-        if Mega.Objects.GUI then
-            Mega.Objects.GUI.Enabled = true
-        end
     end)
-    CreateButton(SettingsFrame, "button_config_reset", function()
-        -- (Код сброса настроек) ...
-        -- ... (Я не буду копировать все 30+ строк сброса, но они остаются здесь) ...
-        Mega.Settings = {
-            Menu = {
-                Width = 900, Height = 500, BackgroundColor = Color3.fromRGB(10, 10, 25),
-                TitleBarColor = Color3.fromRGB(0, 100, 200), AccentColor = Color3.fromRGB(0, 180, 255),
-                TextColor = Color3.fromRGB(255, 255, 255), Transparency = 0.05, CornerRadius = 15, AnimationSpeed = 0.3
-            },
-            System = {
-                AntiAFK = true, AutoSaveConfig = true, PerformanceMode = false, DebugMode = false, Logging = true
-            }
-        }
-        
-        MainFrame.BackgroundColor3 = Mega.Settings.Menu.BackgroundColor
-        MainFrame.BackgroundTransparency = Mega.Settings.Menu.Transparency
-        UICorner.CornerRadius = UDim.new(0, Mega.Settings.Menu.CornerRadius)
-        TitleBar.BackgroundColor3 = Mega.Settings.Menu.TitleBarColor
-        Title.TextColor3 = Mega.Settings.Menu.TextColor
-        CloseButton.TextColor3 = Mega.Settings.Menu.TextColor
-        for _, frame in pairs(TabFrames) do
-            frame.ScrollBarImageColor3 = Mega.Settings.Menu.AccentColor
-        end
-        
-        showNotification(GetText("notify_settings_reset"))
-    end)
-    
     -- Вкладка ИГРОКИ
     local PlayerListFrame = TabFrames[GetText("tab_users")]
     CreateSection(PlayerListFrame, "section_player_list")
@@ -4316,8 +4211,7 @@ local function InitializeMainGUI()
             StatsLabel.Text = GetText("stats_label",
                 Mega.Database.Stats.Kills,
                 Mega.Database.Stats.Deaths,
-                Mega.Database.Stats.PlayTime,
-                Mega.Database.Stats.ConfigSaves
+                Mega.Database.Stats.PlayTime
             )
         end
         
@@ -4942,34 +4836,23 @@ local function InitializeMainGUI()
         setreadonly(mt, true)
     end
 
+    -- === ЦИКЛ АВТО-СОХРАНЕНИЯ ===
+    local lastAutoSaveTime = tick()
+    Mega.Objects.Connections.AutoSaveLoop = RunService.Heartbeat:Connect(function()
+        if Mega.Settings.System.AutoSave then
+            if tick() - lastAutoSaveTime > 15 then
+                lastAutoSaveTime = tick()
+                Mega.ConfigSystem.Save("autosave")
+            end
+        end
+    end)
+
     -- Анти-AFK система
     if Mega.Settings.System.AntiAFK then
         local VirtualUser = game:GetService("VirtualUser")
         LocalPlayer.Idled:Connect(function()
             VirtualUser:CaptureController()
             VirtualUser:ClickButton2(Vector2.new())
-        end)
-    end
-    -- Авто-сохранение конфигов
-    if Mega.Settings.System.AutoSaveConfig then
-        local lastAutoSave = tick()
-        Mega.Objects.Connections.AutoSave = RunService.Heartbeat:Connect(function()
-            if tick() - lastAutoSave > 60 then -- Каждые 60 секунд
-                lastAutoSave = tick()
-                
-                local configData = SanitizeConfig({
-                    Settings = Mega.Settings,
-                    States = Mega.States,
-                    Stats = Mega.Database.Stats,
-                    Language = Mega.Localization.CurrentLanguage
-                })
-                
-                if writefile and HttpService then
-                    pcall(function()
-                        writefile("BaconConfig_autosave.json", HttpService:JSONEncode(configData))
-                    end)
-                end
-            end
         end)
     end
 
@@ -5002,14 +4885,6 @@ local function InitializeMainGUI()
     print(GetText("print_kit_esp_ready"))
     print(GetText("print_aim_ready", Mega.States.Keybinds.AimAssist))
     print(GetText("print_all_ready"))
-    
-    -- Сохраняем дефолтный конфиг
-    local configData = {
-        Settings = Mega.Settings,
-        States = Mega.States,
-        Stats = Mega.Database.Stats
-    }
-    Mega.Database.Configs["default"] = configData
     return Mega
 
 end -- === КОНЕЦ ФУНКЦИИ InitializeMainGUI ===
@@ -5098,57 +4973,6 @@ local function ShowStartupNotification()
     Debris:AddItem(StartupGui, 5)
 end
 
--- Функция автозагрузки конфига
-local function AutoLoadConfig()
-    local fileName = "BaconConfig_default.json"
-    
-    if readfile and isfile and isfile(fileName) and HttpService then
-        local success, json = pcall(function()
-            return readfile(fileName)
-        end)
-        if success and json and json ~= "" then
-            local decoded, result = pcall(function()
-                return HttpService:JSONDecode(json)
-            end)
-            if decoded and result then
-                local configData = result
-                configData = RestoreColorsGlobal(configData)
-                
-                if configData.Settings and configData.Settings.Menu then
-                    for key, value in pairs(configData.Settings.Menu) do
-                        if typeof(value) == "Color3" or (type(value) == "table" and value.R) then
-                            Mega.Settings.Menu[key] = typeof(value) == "Color3" and value or Color3.new(value.R, value.G, value.B)
-                        else
-                            Mega.Settings.Menu[key] = value
-                        end
-                    end
-                    if configData.Settings.System then
-                        Mega.Settings.System = configData.Settings.System
-                    end
-                end
-                
-                if configData.States then
-                    for category, settings in pairs(configData.States) do
-                        if Mega.States[category] then
-                            for key, value in pairs(settings) do
-                                Mega.States[category][key] = value
-                            end
-                        end
-                    end
-                end
-                
-                if configData.Stats then
-                    Mega.Database.Stats = configData.Stats
-                end
-                
-                print("💾 Auto-loaded config: default")
-                return true
-            end
-        end
-    end
-    return false
-end
-
 -- Показываем уведомление СРАЗУ при запуске скрипта
 ShowStartupNotification()
 
@@ -5160,8 +4984,9 @@ if savedLanguage then
     Mega.Localization.CurrentLanguage = savedLanguage
     print("Language loaded: " .. savedLanguage)
     
-    -- Автозагрузка конфига (если есть)
-    AutoLoadConfig()
+    if Mega.ConfigSystem.Load("autosave") then
+        print("💾 Auto-save config loaded!")
+    end
     
     showGlobalNotification("Меню открывается на RightShift", 5)
 
@@ -5262,6 +5087,10 @@ JapaneseButton.Parent = ButtonContainer
         -- Сохраняем язык
         SaveLanguage(lang)
 
+        if Mega.ConfigSystem.Load("autosave") then
+            print("💾 Auto-save config loaded!")
+        end
+
         -- Уничтожаем окно выбора
         LanguagePrompt:Destroy()
 
@@ -5301,3 +5130,27 @@ end
 -- === КОНЕЦ: ЛОГИКА ВЫБОРА ЯЗЫКА ===
 
 -- Скрипт теперь автоматически загружает сохраненный язык или показывает окно выбора...
+
+-- === АВТО-ИНДЖЕКТ ПРИ ПЕРЕЗАХОДЕ (QUEUE ON TELEPORT) ===
+local queue_on_teleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport) or (request and request.queue_on_teleport)
+
+if queue_on_teleport and writefile and readfile then
+    -- Сохраняем текущий скрипт для перезапуска
+    task.spawn(function()
+        if getcallingscript then
+            local s, src = pcall(function() return getcallingscript().Source end)
+            if s and src and #src > 100 then
+                writefile("Tumba_Reload.lua", src)
+            end
+        end
+    end)
+
+    local TeleportService = game:GetService("TeleportService")
+    TeleportService.LocalPlayer.OnTeleport:Connect(function(State)
+        if State == Enum.TeleportState.Started or State == Enum.TeleportState.InProgress then
+            if isfile("Tumba_Reload.lua") then
+                queue_on_teleport('task.wait(2); if isfile("Tumba_Reload.lua") then loadstring(readfile("Tumba_Reload.lua"))() end')
+            end
+        end
+    end)
+end
