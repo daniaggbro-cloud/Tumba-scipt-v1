@@ -9,8 +9,9 @@ end
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweService")
+lo
+фcal RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 local TextChatService = game:GetService("TextChatService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
